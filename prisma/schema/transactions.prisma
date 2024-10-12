@@ -1,0 +1,17 @@
+enum TransactionsStatus {
+    PAID
+    CANCELLED
+    REFUSED
+}
+
+model Transactions {
+    id               String              @id @default(uuid())
+    price            Float
+    status           TransactionsStatus  @default(PAID)
+    UserSubscription UsersSubscriptions?
+    createdAt        DateTime            @default(now()) @map(name: "created_at")
+    updatedAt        DateTime            @updatedAt @map(name: "updated_at")
+    isDeleted        Boolean             @default(false) @map(name: "is_deleted")
+
+    @@map(name: "transactions")
+}

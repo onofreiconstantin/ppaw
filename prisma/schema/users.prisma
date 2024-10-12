@@ -1,0 +1,20 @@
+enum UsersRole {
+    ADMIN
+    USER
+}
+
+model Users {
+    id                 String               @id @default(uuid())
+    firstName          String               @map(name: "first_name")
+    lastName           String               @map(name: "last_name")
+    email              String               @unique
+    cnp                String               @unique
+    role               UsersRole            @default(USER)
+    imagePath          String?              @map(name: "image_path")
+    UsersSubscriptions UsersSubscriptions[]
+    createdAt          DateTime             @default(now()) @map(name: "created_at")
+    updatedAt          DateTime             @updatedAt @map(name: "updated_at")
+    isDeleted          Boolean              @default(false) @map(name: "is_deleted")
+
+    @@map(name: "users")
+}
