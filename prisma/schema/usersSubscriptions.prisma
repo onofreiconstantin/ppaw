@@ -5,12 +5,12 @@ enum UsersSubscriptionStatus {
 
 model UsersSubscriptions {
     id             String                  @id @default(uuid())
-    user           Users                   @relation(fields: [userId], references: [id])
-    userId         String
-    subscription   Subscriptions           @relation(fields: [subscriptionId], references: [id])
-    subscriptionId String
-    transaction    Transactions            @relation(fields: [transactionId], references: [id])
-    transactionId  String                  @unique
+    User           Users                   @relation(fields: [userId], references: [id])
+    userId         String                  @map(name: "user_id")
+    Subscription   Subscriptions           @relation(fields: [subscriptionId], references: [id])
+    subscriptionId String                  @map(name: "subscription_id")
+    Transaction    Transactions            @relation(fields: [transactionId], references: [id])
+    transactionId  String                  @unique @map(name: "transaction_id")
     qrCode         String                  @map(name: "qr_code")
     status         UsersSubscriptionStatus @default(ACTIVE)
     expiresAt      DateTime                @default(now()) @map(name: "expires_at")
