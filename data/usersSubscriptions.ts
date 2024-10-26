@@ -7,9 +7,9 @@ const getUserSubscription = async (id: string) => {
       include: { Subscription: true, Transaction: true },
     });
 
-    return { data: { userSubscription }, error: null };
+    return userSubscription;
   } catch (error) {
-    return { data: null, error };
+    throw error;
   }
 };
 
@@ -20,9 +20,9 @@ const getUserSubscriptions = async (userId: string) => {
       include: { Subscription: true, Transaction: true },
     });
 
-    return { data: { userSubscriptions }, error: null };
+    return userSubscriptions;
   } catch (error) {
-    return { data: null, error };
+    throw error;
   }
 };
 

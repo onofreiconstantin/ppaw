@@ -2,15 +2,15 @@ import { getUsers } from "@data/users";
 import { getUserSubscriptions } from "@data/usersSubscriptions";
 
 export default async function Home() {
-  const { data: usersData } = await getUsers();
+  const users = await getUsers();
 
-  console.log("Users -> ", JSON.stringify(usersData));
+  console.log("Users -> ", JSON.stringify(users));
 
-  if (usersData) {
-    const userId = usersData.users[0].id;
-    const { data } = await getUserSubscriptions(userId);
+  if (users.length) {
+    const userId = users[0].id;
+    const usersSubscriptions = await getUserSubscriptions(userId);
 
-    console.log("User subscriptions -> ", JSON.stringify(data));
+    console.log("User subscriptions -> ", JSON.stringify(usersSubscriptions));
   }
 
   return (

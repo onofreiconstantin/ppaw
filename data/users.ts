@@ -6,9 +6,9 @@ const getUser = async (id: string) => {
       where: { id, isDeleted: false },
     });
 
-    return { data: { user }, error: null };
+    return user;
   } catch (error) {
-    return { data: null, error };
+    throw error;
   }
 };
 
@@ -18,9 +18,9 @@ const getUsers = async () => {
       where: { isDeleted: false },
     });
 
-    return { data: { users }, error: null };
+    return users;
   } catch (error) {
-    return { data: null, error };
+    throw error;
   }
 };
 
