@@ -1,10 +1,13 @@
-import prisma from "@library/db";
+import prisma from "@/lib/db";
+import { notFound } from "next/navigation";
 
 const getUser = async (id: string) => {
   try {
     const user = await prisma.users.findUnique({
       where: { id, isDeleted: false },
     });
+
+    if (!user) notFound();
 
     return user;
   } catch (error) {

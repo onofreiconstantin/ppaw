@@ -1,7 +1,11 @@
 "use client";
 
-const Error = () => {
-  return <div>Error</div>;
-};
-
-export default Error;
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  return <div>{error.message}</div>;
+}

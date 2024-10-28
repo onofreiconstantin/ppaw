@@ -1,4 +1,5 @@
-import prisma from "@library/db";
+import prisma from "@/lib/db";
+import { notFound } from "next/navigation";
 
 const getUserSubscription = async (id: string) => {
   try {
@@ -6,6 +7,8 @@ const getUserSubscription = async (id: string) => {
       where: { id, isDeleted: false },
       include: { Subscription: true, Transaction: true },
     });
+
+    if (!userSubscription) notFound();
 
     return userSubscription;
   } catch (error) {
