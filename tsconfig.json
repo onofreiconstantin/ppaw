@@ -25,7 +25,8 @@
       "@data/*": ["data/*"],
       "@lib/*": ["lib/*"],
       "@schemas/*": ["schemas/*"],
-      "@actions/*": ["actions/*"]
+      "@actions/*": ["actions/*"],
+      "@auth/*": ["auth/*"]
     },
     "target": "ES2017"
   },

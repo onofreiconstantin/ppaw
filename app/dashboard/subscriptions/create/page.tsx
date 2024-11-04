@@ -23,7 +23,7 @@ export default async function Page() {
 
   return (
     <div className="flex flex-col gap-8">
-      <h3>Edit subscription</h3>
+      <h3>Create subscription</h3>
       <form action={create} className="flex max-w-md flex-col gap-2">
         <div className="flex items-center gap-2">
           <Label htmlFor="title">Title</Label>

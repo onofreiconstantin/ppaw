@@ -8,9 +8,10 @@ model Users {
     firstName          String               @map(name: "first_name")
     lastName           String               @map(name: "last_name")
     email              String               @unique
-    cnp                String               @unique
+    cnp                String?
     role               UsersRole            @default(USER)
-    imagePath          String?              @map(name: "image_path")
+    imageUrl           String?              @map(name: "image_url")
+    isCompleted        Boolean              @default(false) @map(name: "is_completed")
     UsersSubscriptions UsersSubscriptions[]
     createdAt          DateTime             @default(now()) @map(name: "created_at")
     updatedAt          DateTime             @updatedAt @map(name: "updated_at")

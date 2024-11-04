@@ -1,3 +1,7 @@
 export default function Home() {
-  return <div>HOME PAGE</div>;
+  return (
+    <div>
+      Welcome to the app. Please login to buy a ticker or a subscription.
+    </div>
+  );
 }
