@@ -28,6 +28,7 @@ export default async function RootLayout({
           <nav className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-8">
               <Link href={"/"}>Home</Link>
+              <Link href={"/subscriptions"}>Subscriptions</Link>
               {session?.user && (
                 <>
                   <Link href={"/dashboard"}>Dashboard</Link>

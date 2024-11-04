@@ -2,10 +2,10 @@ import { SubscriptionsType } from "@prisma/client";
 import { z } from "zod";
 
 const createSchema = z.object({
-  title: z.string(),
+  title: z.string().min(2),
   description: z.string(),
-  price: z.number(),
-  time: z.number(),
+  price: z.number().min(1),
+  time: z.number().min(1000 * 60 * 60),
   type: z.enum(
     Object.values(SubscriptionsType) as [
       SubscriptionsType,

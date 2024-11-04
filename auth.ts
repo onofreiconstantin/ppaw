@@ -13,20 +13,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       try {
         if (!user.email) return false;
 
-        const foundUser = await prisma.users.findUnique({
+        let dbUser = await prisma.users.findUnique({
           where: {
             email: user.email,
             isDeleted: false,
           },
         });
 
-        if (!foundUser)
-          await create({
+        if (!dbUser)
+          dbUser = await create({
             email: user.email,
             firstName: user.name?.split(" ")[1] ?? "",
             lastName: user.name?.split(" ")[0] ?? "",
             imageUrl: user.image,
           });
+
+        user.id = dbUser.id;
 
         return true;
       } catch (error) {
@@ -35,7 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session }) {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users?email=${session.user.email}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${session.user.email}`,
       );
       const foundUser = await res.json();
 
