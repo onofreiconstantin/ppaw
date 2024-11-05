@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 const getUser = async (id: string) => {
   try {
     const user = await prisma.users.findUnique({
-      where: { id, isDeleted: false },
+      where: { id },
     });
 
     if (!user) notFound();

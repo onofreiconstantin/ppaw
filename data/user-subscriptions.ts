@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 const getUserSubscription = async (id: string) => {
   try {
     const userSubscription = await prisma.usersSubscriptions.findUnique({
-      where: { id, isDeleted: false },
+      where: { id },
       include: { Subscription: true, Transaction: true },
     });
 

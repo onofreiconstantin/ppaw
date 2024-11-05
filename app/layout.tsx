@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 
-import SignOut from "@/components/auth/sign-out";
-import SignIn from "@/components/auth/sign-in";
+import SignOut from "@/components/sing-out/sign-out";
+import SignIn from "@/components/sign-in/sign-in";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {
@@ -30,13 +30,18 @@ export default async function RootLayout({
               <Link href={"/"}>Home</Link>
               <Link href={"/subscriptions"}>Subscriptions</Link>
               {session?.user && (
-                <>
-                  <Link href={"/dashboard"}>Dashboard</Link>
-                  <Link href={"/account"}>Account</Link>
-                </>
+                <Link href={"/purchase"}>Purchase subscription</Link>
               )}
             </div>
-            {session?.user ? <SignOut /> : <SignIn />}
+            {session?.user ? (
+              <div className="flex items-center gap-8">
+                <Link href={"/dashboard"}>Dashboard</Link>
+                <Link href={"/account"}>Account</Link>
+                <SignOut />
+              </div>
+            ) : (
+              <SignIn />
+            )}
           </nav>
         </header>
         <main className="flex-1">{children}</main>

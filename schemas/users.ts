@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+const createSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  imageUrl: z.string(),
+  email: z.string(),
+});
+
 const editSchema = z.object({
   id: z.string(),
   firstName: z.string().min(2),
@@ -8,4 +15,4 @@ const editSchema = z.object({
   isCompleted: z.boolean(),
 });
 
-export { editSchema };
+export { createSchema, editSchema };

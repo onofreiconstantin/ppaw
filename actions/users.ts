@@ -4,23 +4,6 @@ import prisma from "@/lib/db";
 import { editSchema } from "@/schemas/users";
 import { redirect } from "next/navigation";
 
-async function create(data: {
-  email: string;
-  firstName: string;
-  lastName: string;
-  imageUrl?: string | null;
-}) {
-  try {
-    const user = await prisma.users.create({
-      data,
-    });
-
-    return user;
-  } catch (error) {
-    throw error;
-  }
-}
-
 async function edit(formData: FormData) {
   try {
     const values = {
@@ -50,4 +33,4 @@ async function edit(formData: FormData) {
   }
 }
 
-export { create, edit };
+export { edit };

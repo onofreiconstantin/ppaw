@@ -7,7 +7,7 @@ import { getUser } from "@/data/users";
 import { notFound } from "next/navigation";
 
 export const metadata = {
-  title: "Account | Profile",
+  title: "Account | Edit profile",
 };
 
 export default async function Page() {

@@ -13,7 +13,7 @@ model UsersSubscriptions {
     transactionId  String                  @unique @map(name: "transaction_id")
     qrCode         String                  @map(name: "qr_code")
     status         UsersSubscriptionStatus @default(ACTIVE)
-    expiresAt      DateTime                @default(now()) @map(name: "expires_at")
+    expiresAt      DateTime                @map(name: "expires_at")
     createdAt      DateTime                @default(now()) @map(name: "created_at")
     updatedAt      DateTime                @updatedAt @map(name: "updated_at")
     isDeleted      Boolean                 @default(false) @map(name: "is_deleted")

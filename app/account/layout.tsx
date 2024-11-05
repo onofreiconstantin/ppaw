@@ -9,7 +9,7 @@ const Layout = ({
   return (
     <div className="flex gap-8">
       <nav className="flex flex-col gap-8">
-        <Link href={"/account/profile"}>Profile</Link>
+        <Link href={"/account/edit"}>Edit profile</Link>
         <Link href={"/account/subscriptions"}>Subscriptions</Link>
       </nav>
       {children}

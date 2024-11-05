@@ -55,7 +55,7 @@ export default async function Page() {
           <Input
             name="time"
             type="number"
-            defaultValue={Number(0 / ONE_DAY_IN_MS).toFixed(0)}
+            defaultValue={Number(0 / ONE_DAY_IN_MS).toFixed(1)}
           />
         </div>
         <div className="flex items-center gap-2">
