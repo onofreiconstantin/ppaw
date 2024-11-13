@@ -1,11 +1,11 @@
 enum TransactionsStatus {
     PAID
-    CANCELLED
     REFUSED
 }
 
 model Transactions {
     id               String              @id @default(uuid())
+    paymentId        String
     price            Float
     status           TransactionsStatus  @default(PAID)
     UserSubscription UsersSubscriptions?

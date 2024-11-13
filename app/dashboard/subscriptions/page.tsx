@@ -42,7 +42,7 @@ export default async function Page() {
                 <TableCell>{title}</TableCell>
                 <TableCell>{type}</TableCell>
                 <TableCell>{`${Number(time / ONE_DAY_IN_MS).toFixed(2)} days`}</TableCell>
-                <TableCell>{`${price} LEI`}</TableCell>
+                <TableCell>{`${price} RON`}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Link href={`/dashboard/subscriptions/${id}/edit`}>

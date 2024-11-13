@@ -1,6 +1,6 @@
 "use client";
 
-import { create } from "@/actions/user-subscriptions";
+import { checkout } from "@/actions/stripe";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,11 +18,9 @@ import { FormEventHandler, useState } from "react";
 
 export default function PurchaseForm({
   id,
-  userId,
   subscriptions,
 }: {
   id: string | undefined;
-  userId: string;
   subscriptions: Subscriptions[];
 }) {
   const types = Object.values(SubscriptionsType);
@@ -34,7 +32,7 @@ export default function PurchaseForm({
 
   const handleOnSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    if (subscription?.id) create({ id: subscription?.id, userId });
+    if (subscription?.id) checkout(subscription.id);
   };
 
   return (
@@ -61,14 +59,14 @@ export default function PurchaseForm({
 
       <div className="flex items-center gap-2">
         <Label htmlFor="title">Title</Label>
-        <Input disabled name="title" value={subscription?.title} />
+        <Input disabled name="title" value={subscription?.title ?? ""} />
       </div>
       <div className="flex items-center gap-2">
         <Label htmlFor="description">Description</Label>
         <Textarea
           disabled
           name="description"
-          value={subscription?.description}
+          value={subscription?.description ?? ""}
         />
       </div>
 
@@ -94,7 +92,9 @@ export default function PurchaseForm({
           disabled
           name="time"
           type="number"
-          value={Number(Number(subscription?.time) / ONE_DAY_IN_MS).toFixed(1)}
+          value={
+            Number(Number(subscription?.time) / ONE_DAY_IN_MS).toFixed(1) ?? ""
+          }
         />
       </div>
       <div className="flex items-center gap-2">
@@ -103,7 +103,7 @@ export default function PurchaseForm({
           disabled
           name="price"
           type="number"
-          value={subscription?.price}
+          value={subscription?.price ?? ""}
         />
       </div>
       <Button disabled={!subscription?.id} variant="outline">

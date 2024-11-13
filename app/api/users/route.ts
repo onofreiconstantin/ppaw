@@ -1,11 +1,10 @@
 import prisma from "@/lib/db";
 import { createSchema } from "@/schemas/users";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const values = await request.json();
-
-    console.log(values);
 
     const { success, error, data } = createSchema.safeParse(values);
 
@@ -15,7 +14,7 @@ export async function POST(request: Request) {
       data,
     });
 
-    return Response.json(user);
+    return NextResponse.json(user);
   } catch (error) {
     throw error;
   }

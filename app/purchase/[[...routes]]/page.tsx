@@ -17,18 +17,14 @@ export default async function Page({
     params,
   ]);
 
-  if (!session?.user?.id) throw new Error("You should not be on this page!");
+  if (!session?.user) throw Error("You should not be on this page!");
 
   const id = Array.isArray(routes) ? routes.at(0) : undefined;
 
   return (
     <div className="flex flex-col gap-8">
       <h3>Purchase subscription</h3>
-      <PurchaseForm
-        id={id}
-        userId={session?.user?.id}
-        subscriptions={subscriptions}
-      />
+      <PurchaseForm id={id} subscriptions={subscriptions} />
     </div>
   );
 }

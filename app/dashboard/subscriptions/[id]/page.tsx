@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <p>{`Description: ${description}`}</p>
         <p>{`Type: ${type}`}</p>
         <p>{`Time: ${Number(time / ONE_DAY_IN_MS).toFixed(2)} days`}</p>
-        <p>{`Price: ${price} LEI`}</p>
+        <p>{`Price: ${price} RON`}</p>
       </div>
       <div className="flex gap-2">
         <Link href={`/dashboard/subscriptions/${id}/edit`}>

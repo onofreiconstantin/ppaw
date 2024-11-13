@@ -1,8 +1,9 @@
 import prisma from "@/lib/db";
 import { notFound } from "next/navigation";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   {
     params,
   }: {
@@ -23,7 +24,7 @@ export async function GET(
       },
     });
 
-    return Response.json(user);
+    return NextResponse.json(user);
   } catch (error) {
     throw error;
   }
