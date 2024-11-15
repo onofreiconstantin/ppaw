@@ -7,9 +7,9 @@ export async function GET(
   {
     params,
   }: {
-    params: {
+    params: Promise<{
       email: string;
-    };
+    }>;
   },
 ) {
   try {

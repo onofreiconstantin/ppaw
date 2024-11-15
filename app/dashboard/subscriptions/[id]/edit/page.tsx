@@ -15,7 +15,11 @@ import { SubscriptionsType } from "@prisma/client";
 import { edit } from "@/actions/subscriptions";
 import Link from "next/link";
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const subscription = await getSubscription(id);
   const { title, description } = subscription;
@@ -26,7 +30,11 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const subscription = await getSubscription(id);
   const { title, type, description, time, price } = subscription;

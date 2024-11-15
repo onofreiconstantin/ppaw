@@ -56,6 +56,11 @@ export async function POST(request: NextRequest) {
 
     return new NextResponse();
   } catch (error) {
-    return new NextResponse("Bad request", { status: 400 });
+    return new NextResponse(
+      error instanceof Error ? error.message : "Bad request",
+      {
+        status: 400,
+      },
+    );
   }
 }

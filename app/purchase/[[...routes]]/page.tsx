@@ -9,7 +9,7 @@ export const metadata = {
 export default async function Page({
   params,
 }: {
-  params: { routes: string[] };
+  params: Promise<{ routes: string[] }>;
 }) {
   const [subscriptions, session, { routes }] = await Promise.all([
     getSubscriptions(),
