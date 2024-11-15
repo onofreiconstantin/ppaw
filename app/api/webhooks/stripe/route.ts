@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       case "charge.succeeded":
         const { payment_intent, metadata, billing_details, amount } =
           event.data.object;
-        const { id } = metadata;
+        const { id, userId } = metadata;
         const { email } = billing_details;
 
         if (!email) return new NextResponse("Bad request", { status: 400 });
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
             where: { id },
           }),
           prisma.users.findUnique({
-            where: { email },
+            where: { id: userId },
           }),
         ]);
 

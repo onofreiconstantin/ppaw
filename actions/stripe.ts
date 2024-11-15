@@ -36,7 +36,9 @@ async function checkout(id: string) {
           quantity: 1,
         },
       ],
-      payment_intent_data: { metadata: { id } },
+      payment_intent_data: {
+        metadata: { id, userId: String(session.user.id) },
+      },
       customer_email: String(session.user.email),
       mode: "payment",
       success_url: `${origin}/purchase/success`,
