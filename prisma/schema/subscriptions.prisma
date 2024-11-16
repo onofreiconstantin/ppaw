@@ -9,7 +9,7 @@ model Subscriptions {
     description        String
     price              Float
     type               SubscriptionsType
-    time               Int
+    time               BigInt
     UsersSubscriptions UsersSubscriptions[]
     createdAt          DateTime             @default(now()) @map(name: "created_at")
     updatedAt          DateTime             @updatedAt @map(name: "updated_at")
