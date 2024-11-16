@@ -11,7 +11,7 @@ async function create(formData: FormData) {
       title: formData.get("title"),
       description: formData.get("description"),
       price: Number(formData.get("price")),
-      time: Number(formData.get("time")) * ONE_DAY_IN_MS,
+      time: BigInt(Number(formData.get("time")) * ONE_DAY_IN_MS),
       type: formData.get("type"),
     };
 
@@ -36,7 +36,7 @@ async function edit(formData: FormData) {
       title: formData.get("title"),
       description: formData.get("description"),
       price: Number(formData.get("price")),
-      time: Number(formData.get("time")) * ONE_DAY_IN_MS,
+      time: BigInt(Number(formData.get("time")) * ONE_DAY_IN_MS),
       type: formData.get("type"),
     };
 

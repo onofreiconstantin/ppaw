@@ -5,7 +5,7 @@ const createSchema = z.object({
   title: z.string().min(2),
   description: z.string(),
   price: z.number().min(1),
-  time: z.number().min(1000 * 60 * 60),
+  time: z.bigint().min(BigInt(1000 * 60 * 60)),
   type: z.enum(
     Object.values(SubscriptionsType) as [
       SubscriptionsType,
@@ -19,7 +19,7 @@ const editSchema = z.object({
   title: z.string(),
   description: z.string(),
   price: z.number(),
-  time: z.number(),
+  time: z.bigint(),
   type: z.enum(
     Object.values(SubscriptionsType) as [
       SubscriptionsType,

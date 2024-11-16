@@ -41,7 +41,7 @@ export default async function Page() {
               <TableRow key={id}>
                 <TableCell>{title}</TableCell>
                 <TableCell>{type}</TableCell>
-                <TableCell>{`${Number(time / ONE_DAY_IN_MS).toFixed(2)} days`}</TableCell>
+                <TableCell>{`${Number(Number(time) / ONE_DAY_IN_MS).toFixed(2)} days`}</TableCell>
                 <TableCell>{`${price} RON`}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">

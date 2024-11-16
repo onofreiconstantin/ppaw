@@ -34,7 +34,7 @@ export default async function Page({
         <p>{`Title: ${title}`}</p>
         <p>{`Description: ${description}`}</p>
         <p>{`Type: ${type}`}</p>
-        <p>{`Time: ${Number(time / ONE_DAY_IN_MS).toFixed(2)} days`}</p>
+        <p>{`Time: ${Number(Number(time) / ONE_DAY_IN_MS).toFixed(2)} days`}</p>
         <p>{`Price: ${price} RON`}</p>
       </div>
       <div className="flex gap-2">

@@ -44,7 +44,9 @@ export async function POST(request: NextRequest) {
               subscriptionId: id,
               transactionId: transaction.id,
               qrCode: crypto.randomUUID(),
-              expiresAt: new Date(new Date().getTime() + subscription.time),
+              expiresAt: new Date(
+                new Date().getTime() + Number(subscription.time),
+              ),
             },
           });
         });
