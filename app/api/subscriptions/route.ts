@@ -1,4 +1,5 @@
 import prisma from "@/lib/db";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -8,7 +9,12 @@ export async function GET() {
       },
     });
 
-    return Response.json(subscriptions);
+    return NextResponse.json(
+      subscriptions.map((subscription) => ({
+        ...subscription,
+        time: subscription.time.toString(),
+      })),
+    );
   } catch (error) {
     throw error;
   }
