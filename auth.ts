@@ -1,30 +1,28 @@
 import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
+import authConfig from "@/auth.config";
+import prisma from "@lib/db";
+
+const { callbacks, ...config } = authConfig;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [Google],
   callbacks: {
-    authorized({ auth }) {
-      return !!auth?.user;
-    },
+    ...callbacks,
     async signIn({ user }) {
       try {
         if (!user.email) return false;
 
-        const res = await fetch(
-          `${process.env.BASE_URL}/api/users/${user.email}`,
-        );
-        const foundUser = await res.json();
+        const foundUser = await prisma.users.findUnique({
+          where: { email: user.email },
+        });
 
         if (!foundUser)
-          await fetch(`${process.env.BASE_URL}/api/users`, {
-            method: "POST",
-            body: JSON.stringify({
+          await prisma.users.create({
+            data: {
               email: user.email,
               firstName: user.name?.split(" ")[1] ?? "",
               lastName: user.name?.split(" ")[0] ?? "",
               imageUrl: user.image,
-            }),
+            },
           });
 
         return true;
@@ -33,14 +31,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
     async session({ session }) {
-      const res = await fetch(
-        `${process.env.BASE_URL}/api/users/${session.user.email}`,
-      );
-      const foundUser = await res.json();
+      const foundUser = await prisma.users.findUnique({
+        where: { email: session.user.email },
+      });
+
+      if (!foundUser) throw Error("Something went wrong!");
 
       session.user.id = foundUser.id;
 
       return session;
     },
   },
+  ...config,
 });
