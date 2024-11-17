@@ -17,7 +17,7 @@ async function create(formData: FormData) {
 
     const { success, error, data } = createSchema.safeParse(values);
 
-    if (!success) throw error.flatten().fieldErrors;
+    if (!success) return { error: error.flatten().fieldErrors };
 
     await prisma.subscriptions.create({
       data,
@@ -25,7 +25,9 @@ async function create(formData: FormData) {
 
     redirect("/dashboard/subscriptions");
   } catch (error) {
-    throw error;
+    return {
+      error: error instanceof Error ? error.message : "Something went wrong!",
+    };
   }
 }
 
@@ -42,7 +44,7 @@ async function edit(formData: FormData) {
 
     const { success, error, data } = editSchema.safeParse(values);
 
-    if (!success) throw error.flatten().fieldErrors;
+    if (!success) return { error: error.flatten().fieldErrors };
 
     const { id, ...rest } = data;
 
@@ -55,7 +57,9 @@ async function edit(formData: FormData) {
 
     redirect("/dashboard/subscriptions");
   } catch (error) {
-    throw error;
+    return {
+      error: error instanceof Error ? error.message : "Something went wrong!",
+    };
   }
 }
 

@@ -12,7 +12,8 @@ async function checkout(id: string) {
   try {
     const session = await auth();
 
-    if (!session?.user) throw Error("You have no access to call this action!");
+    if (!session?.user)
+      return { error: "You have no access to call this action!" };
 
     const subscription = await prisma.subscriptions.findUnique({
       where: { id },
@@ -45,11 +46,13 @@ async function checkout(id: string) {
       cancel_url: `${origin}/purchase/cancel`,
     });
 
-    if (!paymentSession.url) throw new Error("No checkout page was provided!");
+    if (!paymentSession.url) return { error: "No checkout page was provided!" };
 
     redirect(paymentSession.url);
   } catch (error) {
-    throw error;
+    return {
+      error: error instanceof Error ? error.message : "Something went wrong!",
+    };
   }
 }
 

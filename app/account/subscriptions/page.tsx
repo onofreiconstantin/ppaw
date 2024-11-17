@@ -16,7 +16,7 @@ export const metadata = {
 export default async function Page() {
   const session = await auth();
 
-  if (!session?.user?.id) throw new Error("You should not be on this page");
+  if (!session?.user?.id) throw Error("You should not be on this page");
 
   const userSubscriptions = await getUserSubscriptions(session.user.id);
 
