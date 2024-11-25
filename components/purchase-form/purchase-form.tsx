@@ -13,15 +13,21 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ONE_DAY_IN_MS } from "@/lib/constants";
-import { Subscriptions, SubscriptionsType } from "@prisma/client";
+import {
+  Subscriptions,
+  SubscriptionsType,
+  UsersSubscriptions,
+} from "@prisma/client";
 import { FormEventHandler, useState } from "react";
 
 export default function PurchaseForm({
   id,
   subscriptions,
+  activeSubscription,
 }: {
   id: string | undefined;
   subscriptions: Subscriptions[];
+  activeSubscription: UsersSubscriptions | null;
 }) {
   const types = Object.values(SubscriptionsType);
 
@@ -34,6 +40,23 @@ export default function PurchaseForm({
     e.preventDefault();
     if (subscription?.id) checkout(subscription.id);
   };
+
+  const price = subscription
+    ? subscription.type === "SUBSCRIPTION" && activeSubscription
+      ? (() => {
+          const remainingTime =
+            new Date(activeSubscription.expiresAt).getTime() -
+            new Date().getTime();
+
+          if (remainingTime <= 0) return subscription.price;
+
+          return (
+            (subscription.price * (Number(subscription.time) - remainingTime)) /
+            Number(subscription.time)
+          ).toFixed(2);
+        })()
+      : subscription.price
+    : "";
 
   return (
     <form className="flex max-w-md flex-col gap-2" onSubmit={handleOnSubmit}>
@@ -48,11 +71,27 @@ export default function PurchaseForm({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {subscriptions.map((subscription) => (
-              <SelectItem key={subscription.id} value={subscription.id}>
-                {subscription.title}
-              </SelectItem>
-            ))}
+            {subscriptions.map((subscription) => {
+              const { id, type, title, time } = subscription;
+
+              const disabled = Boolean(
+                type === "SUBSCRIPTION" &&
+                  activeSubscription &&
+                  new Date(activeSubscription?.expiresAt).setHours(
+                    0,
+                    0,
+                    0,
+                    0,
+                  ) >=
+                    new Date().setHours(0, 0, 0, 0) + Number(time),
+              );
+
+              return (
+                <SelectItem key={id} value={id} disabled={disabled}>
+                  {title}
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
       </div>
@@ -95,16 +134,12 @@ export default function PurchaseForm({
           value={
             Number(Number(subscription?.time) / ONE_DAY_IN_MS).toFixed(1) ?? ""
           }
+          step="0.01"
         />
       </div>
       <div className="flex items-center gap-2">
         <Label htmlFor="price">Price</Label>
-        <Input
-          disabled
-          name="price"
-          type="number"
-          value={subscription?.price ?? ""}
-        />
+        <Input disabled name="price" type="number" value={price} />
       </div>
       <Button disabled={!subscription?.id} variant="outline">
         Purchase

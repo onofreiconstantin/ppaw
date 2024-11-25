@@ -29,4 +29,22 @@ const getUserSubscriptions = async (userId: string) => {
   }
 };
 
-export { getUserSubscription, getUserSubscriptions };
+const getActiveSubscription = async (userId: string) => {
+  try {
+    const userSubscription = await prisma.usersSubscriptions.findFirst({
+      where: {
+        userId,
+        status: "ACTIVE",
+        Subscription: { type: "SUBSCRIPTION" },
+        isDeleted: false,
+      },
+      include: { Subscription: true, Transaction: true },
+    });
+
+    return userSubscription;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { getUserSubscription, getUserSubscriptions, getActiveSubscription };

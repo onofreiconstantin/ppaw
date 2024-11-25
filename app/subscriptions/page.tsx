@@ -12,8 +12,9 @@ import { ONE_DAY_IN_MS } from "@/lib/constants";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { getUser } from "@/data/users";
-import { Users } from "@prisma/client";
+import { Users, UsersSubscriptions } from "@prisma/client";
 import SignIn from "@/components/sign-in/sign-in";
+import { getActiveSubscription } from "@/data/user-subscriptions";
 
 export const metadata = {
   title: "Subscriptions",
@@ -25,8 +26,14 @@ export default async function Page() {
     auth(),
   ]);
 
-  let user: Users;
-  if (session?.user?.id) user = await getUser(session.user.id);
+  let user: Users,
+    activeSubscription: UsersSubscriptions | null = null;
+
+  if (session?.user?.id)
+    [user, activeSubscription] = await Promise.all([
+      getUser(session.user.id),
+      getActiveSubscription(session.user.id),
+    ]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -44,6 +51,16 @@ export default async function Page() {
           {subscriptions.map((subscription) => {
             const { id, title, type, time, price } = subscription;
 
+            const purchase =
+              type === "TICKET" ||
+              (type === "SUBSCRIPTION" && !activeSubscription);
+
+            const renewOrUpgrade =
+              type === "SUBSCRIPTION" &&
+              activeSubscription &&
+              new Date(activeSubscription?.expiresAt).setHours(0, 0, 0, 0) <
+                new Date().setHours(0, 0, 0, 0) + Number(time);
+
             return (
               <TableRow key={id}>
                 <TableCell>{title}</TableCell>
@@ -52,9 +69,20 @@ export default async function Page() {
                 <TableCell>{`${price} RON`}</TableCell>
                 <TableCell>
                   {session?.user && user.isCompleted ? (
-                    <Link href={`/purchase/${id}`}>
-                      <Button variant="outline">Purchase</Button>
-                    </Link>
+                    purchase || renewOrUpgrade ? (
+                      <Link href={`/purchase/${id}`}>
+                        <Button variant="outline">
+                          {purchase
+                            ? "Purchase"
+                            : activeSubscription &&
+                                activeSubscription.subscriptionId === id
+                              ? "Renew"
+                              : "Upgrade"}
+                        </Button>
+                      </Link>
+                    ) : (
+                      "You can't buy this subscription"
+                    )
                   ) : !session?.user ? (
                     <SignIn />
                   ) : (

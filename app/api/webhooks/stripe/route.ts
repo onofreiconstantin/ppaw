@@ -1,3 +1,6 @@
+import { getSubscription } from "@/data/subscriptions";
+import { getActiveSubscription } from "@/data/user-subscriptions";
+import { getUser } from "@/data/users";
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -14,20 +17,13 @@ export async function POST(request: NextRequest) {
 
     switch (event.type) {
       case "charge.succeeded":
-        const { payment_intent, metadata, billing_details, amount } =
-          event.data.object;
+        const { payment_intent, metadata, amount } = event.data.object;
         const { id, userId } = metadata;
-        const { email } = billing_details;
 
-        if (!email) return new NextResponse("Bad request", { status: 400 });
-
-        const [subscription, user] = await Promise.all([
-          prisma.subscriptions.findUnique({
-            where: { id },
-          }),
-          prisma.users.findUnique({
-            where: { id: userId },
-          }),
+        const [subscription, user, activeSubscription] = await Promise.all([
+          getSubscription(id),
+          getUser(userId),
+          getActiveSubscription(userId),
         ]);
 
         if (!subscription || !user)
@@ -37,6 +33,12 @@ export async function POST(request: NextRequest) {
           const transaction = await tx.transactions.create({
             data: { paymentId: payment_intent as string, price: amount / 100 },
           });
+
+          if (activeSubscription)
+            await tx.usersSubscriptions.update({
+              where: { id: activeSubscription.id },
+              data: { status: "INACTIVE" },
+            });
 
           await tx.usersSubscriptions.create({
             data: {

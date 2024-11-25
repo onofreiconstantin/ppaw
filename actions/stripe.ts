@@ -1,7 +1,8 @@
 "use server";
 
 import { auth } from "@/auth";
-import prisma from "@/lib/db";
+import { getSubscription } from "@/data/subscriptions";
+import { getActiveSubscription } from "@/data/user-subscriptions";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Stripe from "stripe";
@@ -11,14 +12,35 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 async function checkout(id: string) {
   const session = await auth();
 
-  if (!session?.user)
+  if (!session?.user?.id)
     return { error: "You have no access to call this action!" };
 
-  const subscription = await prisma.subscriptions.findUnique({
-    where: { id },
-  });
+  const [subscription, activeSubscription] = await Promise.all([
+    getSubscription(id),
+    getActiveSubscription(session.user.id),
+  ]);
 
-  if (!subscription) return { error: "The subscription no longer exists!" };
+  if (!subscription || subscription.isDeleted)
+    return { error: "The subscription no longer exists!" };
+
+  const price =
+    subscription.type === "SUBSCRIPTION" && activeSubscription
+      ? (() => {
+          const remainingTime =
+            new Date(activeSubscription.expiresAt).getTime() -
+            new Date().getTime();
+
+          if (remainingTime <= 0) return subscription.price;
+
+          return Number(
+            (
+              (subscription.price *
+                (Number(subscription.time) - remainingTime)) /
+              Number(subscription.time)
+            ).toFixed(2),
+          );
+        })()
+      : subscription.price;
 
   const headersList = await headers();
   const origin = headersList.get("origin");
@@ -31,7 +53,7 @@ async function checkout(id: string) {
           product_data: {
             name: subscription.title,
           },
-          unit_amount: subscription.price * 100,
+          unit_amount: price * 100,
         },
         quantity: 1,
       },
