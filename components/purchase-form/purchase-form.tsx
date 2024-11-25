@@ -74,20 +74,28 @@ export default function PurchaseForm({
             {subscriptions.map((subscription) => {
               const { id, type, title, time } = subscription;
 
-              const disabled = Boolean(
+              const disabledRenew = Boolean(
                 type === "SUBSCRIPTION" &&
                   activeSubscription &&
-                  new Date(activeSubscription?.expiresAt).setHours(
-                    0,
-                    0,
-                    0,
-                    0,
-                  ) >=
-                    new Date().setHours(0, 0, 0, 0) + Number(time),
+                  activeSubscription.subscriptionId === id &&
+                  new Date(activeSubscription?.expiresAt).getTime() >=
+                    new Date().getTime(),
+              );
+
+              const disabledUpgrade = Boolean(
+                type === "SUBSCRIPTION" &&
+                  activeSubscription &&
+                  activeSubscription.subscriptionId !== id &&
+                  new Date(activeSubscription?.expiresAt).getTime() >=
+                    new Date().getTime() + Number(time),
               );
 
               return (
-                <SelectItem key={id} value={id} disabled={disabled}>
+                <SelectItem
+                  key={id}
+                  value={id}
+                  disabled={disabledRenew || disabledUpgrade}
+                >
                   {title}
                 </SelectItem>
               );

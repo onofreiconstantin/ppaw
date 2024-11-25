@@ -55,11 +55,19 @@ export default async function Page() {
               type === "TICKET" ||
               (type === "SUBSCRIPTION" && !activeSubscription);
 
-            const renewOrUpgrade =
+            const renew =
               type === "SUBSCRIPTION" &&
               activeSubscription &&
-              new Date(activeSubscription?.expiresAt).setHours(0, 0, 0, 0) <
-                new Date().setHours(0, 0, 0, 0) + Number(time);
+              activeSubscription.subscriptionId === id &&
+              new Date(activeSubscription?.expiresAt).getTime() <
+                new Date().getTime();
+
+            const upgrade =
+              type === "SUBSCRIPTION" &&
+              activeSubscription &&
+              activeSubscription.subscriptionId !== id &&
+              new Date(activeSubscription?.expiresAt).getTime() <
+                new Date().getTime() + Number(time);
 
             return (
               <TableRow key={id}>
@@ -69,15 +77,10 @@ export default async function Page() {
                 <TableCell>{`${price} RON`}</TableCell>
                 <TableCell>
                   {session?.user && user.isCompleted ? (
-                    purchase || renewOrUpgrade ? (
+                    purchase || renew || upgrade ? (
                       <Link href={`/purchase/${id}`}>
                         <Button variant="outline">
-                          {purchase
-                            ? "Purchase"
-                            : activeSubscription &&
-                                activeSubscription.subscriptionId === id
-                              ? "Renew"
-                              : "Upgrade"}
+                          {purchase ? "Purchase" : renew ? "Renew" : "Upgrade"}
                         </Button>
                       </Link>
                     ) : (
