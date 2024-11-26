@@ -41,8 +41,8 @@ export default function PurchaseForm({
     if (subscription?.id) checkout(subscription.id);
   };
 
-  const price = subscription
-    ? subscription.type === "SUBSCRIPTION" && activeSubscription
+  const price =
+    subscription && subscription.type === "SUBSCRIPTION" && activeSubscription
       ? (() => {
           const remainingTime =
             new Date(activeSubscription.expiresAt).getTime() -
@@ -55,8 +55,7 @@ export default function PurchaseForm({
             Number(subscription.time)
           ).toFixed(2);
         })()
-      : subscription.price
-    : "";
+      : (subscription?.price ?? "");
 
   return (
     <form className="flex max-w-md flex-col gap-2" onSubmit={handleOnSubmit}>

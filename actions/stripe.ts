@@ -23,8 +23,28 @@ async function checkout(id: string) {
   if (!subscription || subscription.isDeleted)
     return { error: "The subscription no longer exists!" };
 
+  const purchase =
+    subscription.type === "TICKET" ||
+    (subscription.type === "SUBSCRIPTION" && !activeSubscription);
+
+  const renew =
+    subscription.type === "SUBSCRIPTION" &&
+    activeSubscription &&
+    activeSubscription.subscriptionId === id &&
+    new Date(activeSubscription?.expiresAt).getTime() < new Date().getTime();
+
+  const upgrade =
+    subscription.type === "SUBSCRIPTION" &&
+    activeSubscription &&
+    activeSubscription.subscriptionId !== id &&
+    new Date(activeSubscription?.expiresAt).getTime() <
+      new Date().getTime() + Number(subscription.time);
+
+  if (!purchase && !renew && !upgrade)
+    return { error: "Something went wrong!" };
+
   const price =
-    subscription.type === "SUBSCRIPTION" && activeSubscription
+    renew || upgrade
       ? (() => {
           const remainingTime =
             new Date(activeSubscription.expiresAt).getTime() -
