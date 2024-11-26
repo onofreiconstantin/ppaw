@@ -28,7 +28,11 @@ async function checkout(id: string) {
 
   if (!paymentType) return { error: "Something went wrong!" };
 
-  const price = getPaymentPrice(subscription, activeSubscription);
+  const paymentPrice = getPaymentPrice(
+    paymentType,
+    subscription,
+    activeSubscription,
+  );
 
   const headersList = await headers();
   const origin = headersList.get("origin");
@@ -41,7 +45,7 @@ async function checkout(id: string) {
           product_data: {
             name: subscription.title,
           },
-          unit_amount: price * 100,
+          unit_amount: paymentPrice * 100,
         },
         quantity: 1,
       },

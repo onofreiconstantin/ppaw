@@ -69,9 +69,7 @@ export default async function Page() {
                       <Link href={`/purchase/${id}`}>
                         <Button variant="outline">{paymentType}</Button>
                       </Link>
-                    ) : (
-                      "You can't buy this subscription"
-                    )
+                    ) : null
                   ) : !session?.user ? (
                     <SignIn />
                   ) : (

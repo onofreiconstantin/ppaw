@@ -42,6 +42,15 @@ export default function PurchaseForm({
     if (subscription?.id) checkout(subscription.id);
   };
 
+  const paymentType = subscription
+    ? getPaymentType(subscription, activeSubscription)
+    : null;
+
+  const paymentPrice =
+    paymentType && subscription
+      ? getPaymentPrice(paymentType, subscription, activeSubscription)
+      : "";
+
   return (
     <form className="flex max-w-md flex-col gap-2" onSubmit={handleOnSubmit}>
       <div className="flex items-center gap-2">
@@ -118,16 +127,7 @@ export default function PurchaseForm({
       </div>
       <div className="flex items-center gap-2">
         <Label htmlFor="price">Price</Label>
-        <Input
-          disabled
-          name="price"
-          type="number"
-          value={
-            subscription
-              ? getPaymentPrice(subscription, activeSubscription)
-              : ""
-          }
-        />
+        <Input disabled name="price" type="number" value={paymentPrice} />
       </div>
       <Button disabled={!subscription?.id} variant="outline">
         Purchase

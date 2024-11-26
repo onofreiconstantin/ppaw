@@ -1,41 +1,43 @@
 import { Subscriptions, UsersSubscriptions } from "@prisma/client";
 
+enum PaymentType {
+  PURCHASE = "PURCHASE",
+  RENEW = "RENEW",
+  UPGRADE = "UPGRADE",
+}
+
 function getPaymentType(
   subscription: Subscriptions,
   activeSubscription: UsersSubscriptions | null,
 ) {
+  if (subscription.type === "TICKET" || !activeSubscription)
+    return PaymentType.PURCHASE;
+
   if (
-    subscription.type === "TICKET" ||
-    (subscription.type === "SUBSCRIPTION" && !activeSubscription)
-  ) {
-    return "PURCHASE";
-  }
+    activeSubscription.subscriptionId === subscription.id &&
+    new Date(activeSubscription.expiresAt).getTime() < new Date().getTime()
+  )
+    return PaymentType.RENEW;
 
-  if (subscription.type === "SUBSCRIPTION" && activeSubscription) {
-    if (
-      activeSubscription.subscriptionId === subscription.id &&
-      new Date(activeSubscription?.expiresAt).getTime() < new Date().getTime()
-    )
-      return "RENEW";
-
-    if (
-      activeSubscription.subscriptionId !== subscription.id &&
-      new Date(activeSubscription?.expiresAt).getTime() <
-        new Date().getTime() + Number(subscription.time)
-    )
-      return "UPGRADE";
-  }
+  if (
+    activeSubscription.subscriptionId !== subscription.id &&
+    new Date(activeSubscription.expiresAt).getTime() <
+      new Date().getTime() + Number(subscription.time)
+  )
+    return PaymentType.UPGRADE;
 
   return null;
 }
 
 function getPaymentPrice(
+  paymentType: keyof typeof PaymentType,
   subscription: Subscriptions,
   activeSubscription: UsersSubscriptions | null,
 ) {
-  if (activeSubscription && subscription.type === "SUBSCRIPTION") {
+  if (paymentType === "PURCHASE") return subscription.price;
+  else {
     const remainingTime =
-      new Date(activeSubscription.expiresAt).getTime() - new Date().getTime();
+      new Date(activeSubscription!.expiresAt).getTime() - new Date().getTime();
 
     if (remainingTime <= 0) return subscription.price;
 
@@ -45,7 +47,7 @@ function getPaymentPrice(
         Number(subscription.time)
       ).toFixed(2),
     );
-  } else return subscription.price;
+  }
 }
 
 export { getPaymentType, getPaymentPrice };
