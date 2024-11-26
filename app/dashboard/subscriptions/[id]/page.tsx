@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getSubscription } from "@/data/subscriptions";
-import { ONE_DAY_IN_MS } from "@/lib/constants";
+import { ONE_DAY_IN_MS } from "@/utils/constants";
 import Link from "next/link";
 
 export async function generateMetadata({

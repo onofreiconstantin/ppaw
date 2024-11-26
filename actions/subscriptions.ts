@@ -1,6 +1,6 @@
 "use server";
 
-import { ONE_DAY_IN_MS } from "@/lib/constants";
+import { ONE_DAY_IN_MS } from "@/utils/constants";
 import prisma from "@/lib/db";
 import { createSchema, editSchema } from "@/schemas/subscriptions";
 import { redirect } from "next/navigation";

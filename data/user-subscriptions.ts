@@ -36,7 +36,6 @@ const getActiveSubscription = async (userId: string) => {
         userId,
         status: "ACTIVE",
         Subscription: { type: "SUBSCRIPTION" },
-        isDeleted: false,
       },
       include: { Subscription: true, Transaction: true },
     });

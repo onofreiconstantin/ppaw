@@ -8,13 +8,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ONE_DAY_IN_MS } from "@/lib/constants";
+import { ONE_DAY_IN_MS } from "@/utils/constants";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { getUser } from "@/data/users";
 import { Users, UsersSubscriptions } from "@prisma/client";
 import SignIn from "@/components/sign-in/sign-in";
 import { getActiveSubscription } from "@/data/user-subscriptions";
+import { getPaymentType } from "@/utils/payments";
 
 export const metadata = {
   title: "Subscriptions",
@@ -51,23 +52,10 @@ export default async function Page() {
           {subscriptions.map((subscription) => {
             const { id, title, type, time, price } = subscription;
 
-            const purchase =
-              type === "TICKET" ||
-              (type === "SUBSCRIPTION" && !activeSubscription);
-
-            const renew =
-              type === "SUBSCRIPTION" &&
-              activeSubscription &&
-              activeSubscription.subscriptionId === id &&
-              new Date(activeSubscription?.expiresAt).getTime() <
-                new Date().getTime();
-
-            const upgrade =
-              type === "SUBSCRIPTION" &&
-              activeSubscription &&
-              activeSubscription.subscriptionId !== id &&
-              new Date(activeSubscription?.expiresAt).getTime() <
-                new Date().getTime() + Number(time);
+            const paymentType = getPaymentType(
+              subscription,
+              activeSubscription,
+            );
 
             return (
               <TableRow key={id}>
@@ -77,11 +65,9 @@ export default async function Page() {
                 <TableCell>{`${price} RON`}</TableCell>
                 <TableCell>
                   {session?.user && user.isCompleted ? (
-                    purchase || renew || upgrade ? (
+                    paymentType ? (
                       <Link href={`/purchase/${id}`}>
-                        <Button variant="outline">
-                          {purchase ? "Purchase" : renew ? "Renew" : "Upgrade"}
-                        </Button>
+                        <Button variant="outline">{paymentType}</Button>
                       </Link>
                     ) : (
                       "You can't buy this subscription"

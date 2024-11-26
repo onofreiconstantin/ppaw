@@ -12,7 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { ONE_DAY_IN_MS } from "@/lib/constants";
+import { ONE_DAY_IN_MS } from "@/utils/constants";
+import { getPaymentPrice, getPaymentType } from "@/utils/payments";
 import {
   Subscriptions,
   SubscriptionsType,
@@ -41,22 +42,6 @@ export default function PurchaseForm({
     if (subscription?.id) checkout(subscription.id);
   };
 
-  const price =
-    subscription && subscription.type === "SUBSCRIPTION" && activeSubscription
-      ? (() => {
-          const remainingTime =
-            new Date(activeSubscription.expiresAt).getTime() -
-            new Date().getTime();
-
-          if (remainingTime <= 0) return subscription.price;
-
-          return (
-            (subscription.price * (Number(subscription.time) - remainingTime)) /
-            Number(subscription.time)
-          ).toFixed(2);
-        })()
-      : (subscription?.price ?? "");
-
   return (
     <form className="flex max-w-md flex-col gap-2" onSubmit={handleOnSubmit}>
       <div className="flex items-center gap-2">
@@ -71,31 +56,18 @@ export default function PurchaseForm({
           </SelectTrigger>
           <SelectContent>
             {subscriptions.map((subscription) => {
-              const { id, type, title, time } = subscription;
-
-              const disabledRenew = Boolean(
-                type === "SUBSCRIPTION" &&
-                  activeSubscription &&
-                  activeSubscription.subscriptionId === id &&
-                  new Date(activeSubscription?.expiresAt).getTime() >=
-                    new Date().getTime(),
-              );
-
-              const disabledUpgrade = Boolean(
-                type === "SUBSCRIPTION" &&
-                  activeSubscription &&
-                  activeSubscription.subscriptionId !== id &&
-                  new Date(activeSubscription?.expiresAt).getTime() >=
-                    new Date().getTime() + Number(time),
+              const paymentType = getPaymentType(
+                subscription,
+                activeSubscription,
               );
 
               return (
                 <SelectItem
-                  key={id}
-                  value={id}
-                  disabled={disabledRenew || disabledUpgrade}
+                  key={subscription.id}
+                  value={subscription.id}
+                  disabled={!paymentType}
                 >
-                  {title}
+                  {subscription.title}
                 </SelectItem>
               );
             })}
@@ -146,7 +118,16 @@ export default function PurchaseForm({
       </div>
       <div className="flex items-center gap-2">
         <Label htmlFor="price">Price</Label>
-        <Input disabled name="price" type="number" value={price} />
+        <Input
+          disabled
+          name="price"
+          type="number"
+          value={
+            subscription
+              ? getPaymentPrice(subscription, activeSubscription)
+              : ""
+          }
+        />
       </div>
       <Button disabled={!subscription?.id} variant="outline">
         Purchase

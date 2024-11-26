@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { ONE_DAY_IN_MS } from "@/lib/constants";
+import { ONE_DAY_IN_MS } from "@/utils/constants";
 import { SubscriptionsType } from "@prisma/client";
 import { create } from "@/actions/subscriptions";
 import Link from "next/link";

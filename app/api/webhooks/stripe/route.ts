@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
             data: { paymentId: payment_intent as string, price: amount / 100 },
           });
 
-          if (activeSubscription)
+          if (activeSubscription && subscription.type === "SUBSCRIPTION")
             await tx.usersSubscriptions.update({
               where: { id: activeSubscription.id },
               data: { status: "INACTIVE" },

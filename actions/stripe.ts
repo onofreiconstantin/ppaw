@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { getSubscription } from "@/data/subscriptions";
 import { getActiveSubscription } from "@/data/user-subscriptions";
+import { getPaymentPrice, getPaymentType } from "@/utils/payments";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Stripe from "stripe";
@@ -23,44 +24,11 @@ async function checkout(id: string) {
   if (!subscription || subscription.isDeleted)
     return { error: "The subscription no longer exists!" };
 
-  const purchase =
-    subscription.type === "TICKET" ||
-    (subscription.type === "SUBSCRIPTION" && !activeSubscription);
+  const paymentType = getPaymentType(subscription, activeSubscription);
 
-  const renew =
-    subscription.type === "SUBSCRIPTION" &&
-    activeSubscription &&
-    activeSubscription.subscriptionId === id &&
-    new Date(activeSubscription?.expiresAt).getTime() < new Date().getTime();
+  if (!paymentType) return { error: "Something went wrong!" };
 
-  const upgrade =
-    subscription.type === "SUBSCRIPTION" &&
-    activeSubscription &&
-    activeSubscription.subscriptionId !== id &&
-    new Date(activeSubscription?.expiresAt).getTime() <
-      new Date().getTime() + Number(subscription.time);
-
-  if (!purchase && !renew && !upgrade)
-    return { error: "Something went wrong!" };
-
-  const price =
-    renew || upgrade
-      ? (() => {
-          const remainingTime =
-            new Date(activeSubscription.expiresAt).getTime() -
-            new Date().getTime();
-
-          if (remainingTime <= 0) return subscription.price;
-
-          return Number(
-            (
-              (subscription.price *
-                (Number(subscription.time) - remainingTime)) /
-              Number(subscription.time)
-            ).toFixed(2),
-          );
-        })()
-      : subscription.price;
+  const price = getPaymentPrice(subscription, activeSubscription);
 
   const headersList = await headers();
   const origin = headersList.get("origin");
