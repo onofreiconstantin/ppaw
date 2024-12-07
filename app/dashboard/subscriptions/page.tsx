@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ONE_DAY_IN_MS } from "@/utils/constants";
 import Link from "next/link";
+import { remove } from "@/actions/subscriptions";
 
 export const metadata = {
   title: "Dashboard | Subscriptions",
@@ -51,6 +52,16 @@ export default async function Page() {
                     <Link href={`/dashboard/subscriptions/${id}`}>
                       <Button variant="outline">Details</Button>
                     </Link>
+                    <form action={remove.bind(null, id, "LOGICAL")}>
+                      <Button type="submit" variant="outline">
+                        Logical delete
+                      </Button>
+                    </form>
+                    <form action={remove.bind(null, id, "PHYSICAL")}>
+                      <Button type="submit" variant="outline">
+                        Physical delete
+                      </Button>
+                    </form>
                   </div>
                 </TableCell>
               </TableRow>

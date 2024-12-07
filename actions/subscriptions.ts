@@ -4,6 +4,8 @@ import { ONE_DAY_IN_MS } from "@/utils/constants";
 import prisma from "@/lib/db";
 import { createSchema, editSchema } from "@/schemas/subscriptions";
 import { redirect } from "next/navigation";
+import { getSubscription } from "@/data/subscriptions";
+import { revalidatePath } from "next/cache";
 
 async function create(formData: FormData) {
   const values = {
@@ -51,4 +53,29 @@ async function edit(formData: FormData) {
   redirect("/dashboard/subscriptions");
 }
 
-export { create, edit };
+enum DeleteType {
+  LOGICAL = "LOGICAL",
+  PHYSICAL = "PHYSICAL",
+}
+
+async function remove(id: string, type: keyof typeof DeleteType) {
+  const subscription = await getSubscription(id);
+  if (!subscription) return { error: "There is no subscription with this id!" };
+
+  if (type === DeleteType.LOGICAL) {
+    await prisma.subscriptions.update({
+      where: { id },
+      data: { isDeleted: true },
+    });
+  }
+
+  if (type === DeleteType.PHYSICAL) {
+    await prisma.subscriptions.delete({
+      where: { id },
+    });
+  }
+
+  revalidatePath("/dashboard/subscriptions");
+}
+
+export { create, edit, remove };
