@@ -20,8 +20,6 @@ export default async function Page() {
 
   const userSubscriptions = await getUserSubscriptions(session.user.id);
 
-  console.log(userSubscriptions);
-
   return (
     <Table>
       <TableHeader>

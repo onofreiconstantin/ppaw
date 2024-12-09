@@ -5,6 +5,7 @@ import prisma from "@lib/db";
 const { callbacks, ...config } = authConfig;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...config,
   callbacks: {
     ...callbacks,
     async signIn({ user }) {
@@ -38,9 +39,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (!foundUser) throw Error("Something went wrong!");
 
       session.user.id = foundUser.id;
+      session.user.role = foundUser.role;
 
       return session;
     },
   },
-  ...config,
 });

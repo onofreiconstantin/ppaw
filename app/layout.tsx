@@ -5,6 +5,7 @@ import Link from "next/link";
 import SignOut from "@/components/sing-out/sign-out";
 import SignIn from "@/components/sign-in/sign-in";
 import { auth } from "@/auth";
+import { UsersRole } from "@prisma/client";
 
 export const metadata: Metadata = {
   title: {
@@ -35,7 +36,9 @@ export default async function RootLayout({
             </div>
             {session?.user ? (
               <div className="flex items-center gap-8">
-                <Link href={"/dashboard"}>Dashboard</Link>
+                {session.user.role === UsersRole.ADMIN && (
+                  <Link href={"/dashboard"}>Dashboard</Link>
+                )}
                 <Link href={"/account"}>Account</Link>
                 <SignOut />
               </div>

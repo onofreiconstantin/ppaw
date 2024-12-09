@@ -7,13 +7,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { UsersRole } from "@prisma/client";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 
 export const metadata = {
   title: "Dashboard | Transactions",
 };
 
 export default async function Page() {
-  const transactions = await getTransactions();
+  const [session, transactions] = await Promise.all([
+    auth(),
+    getTransactions(),
+  ]);
+
+  if (session?.user.role === UsersRole.USER) redirect("/");
 
   return (
     <Table>

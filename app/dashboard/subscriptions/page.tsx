@@ -11,13 +11,21 @@ import { Button } from "@/components/ui/button";
 import { ONE_DAY_IN_MS } from "@/utils/constants";
 import Link from "next/link";
 import { remove } from "@/actions/subscriptions";
+import { auth } from "@/auth";
+import { UsersRole } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Dashboard | Subscriptions",
 };
 
 export default async function Page() {
-  const subscriptions = await getSubscriptions();
+  const [session, subscriptions] = await Promise.all([
+    auth(),
+    getSubscriptions(),
+  ]);
+
+  if (session?.user.role === UsersRole.USER) redirect("/");
 
   return (
     <div className="flex flex-col gap-8">
@@ -52,14 +60,9 @@ export default async function Page() {
                     <Link href={`/dashboard/subscriptions/${id}`}>
                       <Button variant="outline">Details</Button>
                     </Link>
-                    <form action={remove.bind(null, id, "LOGICAL")}>
+                    <form action={remove.bind(null, id)}>
                       <Button type="submit" variant="outline">
-                        Logical delete
-                      </Button>
-                    </form>
-                    <form action={remove.bind(null, id, "PHYSICAL")}>
-                      <Button type="submit" variant="outline">
-                        Physical delete
+                        Delete
                       </Button>
                     </form>
                   </div>

@@ -1,7 +1,10 @@
+import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { getSubscription } from "@/data/subscriptions";
 import { ONE_DAY_IN_MS } from "@/utils/constants";
+import { UsersRole } from "@prisma/client";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -23,7 +26,9 @@ export default async function Page({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const [session, { id }] = await Promise.all([auth(), params]);
+  if (session?.user.role === UsersRole.USER) redirect("/");
+
   const subscription = await getSubscription(id);
   const { title, type, description, time, price } = subscription;
 

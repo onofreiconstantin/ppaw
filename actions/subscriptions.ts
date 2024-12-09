@@ -53,27 +53,14 @@ async function edit(formData: FormData) {
   redirect("/dashboard/subscriptions");
 }
 
-enum DeleteType {
-  LOGICAL = "LOGICAL",
-  PHYSICAL = "PHYSICAL",
-}
-
-async function remove(id: string, type: keyof typeof DeleteType) {
+async function remove(id: string) {
   const subscription = await getSubscription(id);
   if (!subscription) return { error: "There is no subscription with this id!" };
 
-  if (type === DeleteType.LOGICAL) {
-    await prisma.subscriptions.update({
-      where: { id },
-      data: { isDeleted: true },
-    });
-  }
-
-  if (type === DeleteType.PHYSICAL) {
-    await prisma.subscriptions.delete({
-      where: { id },
-    });
-  }
+  await prisma.subscriptions.update({
+    where: { id },
+    data: { isDeleted: true },
+  });
 
   revalidatePath("/dashboard/subscriptions");
 }

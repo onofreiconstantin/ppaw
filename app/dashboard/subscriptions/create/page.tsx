@@ -10,15 +10,21 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ONE_DAY_IN_MS } from "@/utils/constants";
-import { SubscriptionsType } from "@prisma/client";
+import { SubscriptionsType, UsersRole } from "@prisma/client";
 import { create } from "@/actions/subscriptions";
 import Link from "next/link";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Dashboard | Subscriptions | Create",
 };
 
 export default async function Page() {
+  const session = await auth();
+
+  if (session?.user.role === UsersRole.USER) redirect("/");
+
   const types = Object.values(SubscriptionsType);
 
   return (
