@@ -17,6 +17,7 @@ export default function Layout({
           Subscriptions - Client version
         </Link>
         <Link href={"/dashboard/transactions"}>Transactions</Link>
+        <Link href={"/dashboard/news"}>News</Link>
       </nav>
       {children}
     </div>

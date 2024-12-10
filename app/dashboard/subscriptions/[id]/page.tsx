@@ -27,7 +27,7 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const [session, { id }] = await Promise.all([auth(), params]);
-  if (session?.user.role === UsersRole.USER) redirect("/");
+  if (session?.user && session?.user.role === UsersRole.USER) redirect("/");
 
   const subscription = await getSubscription(id);
   const { title, type, description, time, price } = subscription;

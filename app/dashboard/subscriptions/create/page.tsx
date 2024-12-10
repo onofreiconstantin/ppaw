@@ -23,7 +23,7 @@ export const metadata = {
 export default async function Page() {
   const session = await auth();
 
-  if (session?.user.role === UsersRole.USER) redirect("/");
+  if (session?.user && session?.user.role === UsersRole.USER) redirect("/");
 
   const types = Object.values(SubscriptionsType);
 

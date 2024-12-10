@@ -13,6 +13,7 @@ model Users {
     imageUrl           String?              @map(name: "image_url")
     isCompleted        Boolean              @default(false) @map(name: "is_completed")
     UsersSubscriptions UsersSubscriptions[]
+    News               News[]
     createdAt          DateTime             @default(now()) @map(name: "created_at")
     updatedAt          DateTime             @updatedAt @map(name: "updated_at")
     isDeleted          Boolean              @default(false) @map(name: "is_deleted")

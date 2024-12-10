@@ -25,7 +25,7 @@ export default async function Page() {
     getSubscriptions(),
   ]);
 
-  if (session?.user.role === UsersRole.USER) redirect("/");
+  if (session?.user && session?.user.role === UsersRole.USER) redirect("/");
 
   return (
     <div className="flex flex-col gap-8">
