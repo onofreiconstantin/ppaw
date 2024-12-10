@@ -1,6 +1,3 @@
-"use cache";
-
-import { unstable_cacheTag as cacheTag } from "next/cache";
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -16,8 +13,6 @@ import { getNews } from "@/data/news";
 import { remove } from "@/actions/news";
 
 export default async function News() {
-  cacheTag("news");
-
   const news = await getNews();
 
   return (

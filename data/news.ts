@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import { notFound } from "next/navigation";
+import { unstable_cache as cache } from "next/cache";
 
 const getNewsItem = async (id: string) => {
   try {
@@ -20,21 +21,25 @@ const getNewsItem = async (id: string) => {
   }
 };
 
-const getNews = async () => {
-  try {
-    const news = await prisma.news.findMany({
-      where: {
-        isDeleted: false,
-      },
-      include: {
-        User: true,
-      },
-    });
+const getNews = cache(
+  async () => {
+    try {
+      const news = await prisma.news.findMany({
+        where: {
+          isDeleted: false,
+        },
+        include: {
+          User: true,
+        },
+      });
 
-    return news;
-  } catch (error) {
-    throw error;
-  }
-};
+      return news;
+    } catch (error) {
+      throw error;
+    }
+  },
+  [],
+  { tags: ["news"] },
+);
 
 export { getNewsItem, getNews };

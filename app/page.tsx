@@ -1,11 +1,6 @@
-"use cache";
-
 import { getNews } from "@/data/news";
-import { unstable_cacheTag as cacheTag } from "next/cache";
 
 export default async function Home() {
-  cacheTag("home");
-
   const news = await getNews();
 
   return (

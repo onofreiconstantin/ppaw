@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getNewsItem } from "@/data/news";
 import { redirect } from "next/navigation";
 import { createSchema } from "@/schemas/news";
@@ -22,7 +22,6 @@ async function create(formData: FormData) {
   });
 
   revalidateTag("news");
-  revalidateTag("home");
   redirect("/dashboard/news");
 }
 
@@ -35,7 +34,6 @@ async function remove(id: string) {
   });
 
   revalidateTag("news");
-  revalidateTag("home");
 }
 
 export { create, remove };
