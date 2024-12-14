@@ -16,6 +16,8 @@ import { edit } from "@/actions/subscriptions";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import PageContainer from "@/components/page-container/page-container";
+import PageTitle from "@/components/page-title/page-title";
 
 export async function generateMetadata({
   params,
@@ -45,8 +47,8 @@ export default async function Page({
   const types = Object.values(SubscriptionsType);
 
   return (
-    <div className="flex flex-col gap-8">
-      <h3>Edit subscription</h3>
+    <PageContainer>
+      <PageTitle>Edit subscription</PageTitle>
       <form action={edit} className="flex max-w-md flex-col gap-2">
         <Input name="id" defaultValue={id} type="hidden" />
         <div className="flex items-center gap-2">
@@ -93,6 +95,6 @@ export default async function Page({
       <Link href={`/dashboard/subscriptions`}>
         <Button variant="outline">Back to list</Button>
       </Link>
-    </div>
+    </PageContainer>
   );
 }

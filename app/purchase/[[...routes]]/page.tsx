@@ -1,4 +1,6 @@
 import { auth } from "@/auth";
+import PageContainer from "@/components/page-container/page-container";
+import PageTitle from "@/components/page-title/page-title";
 import PurchaseForm from "@/components/purchase-form/purchase-form";
 import { getSubscriptions } from "@/data/subscriptions";
 import { getActiveSubscription } from "@/data/user-subscriptions";
@@ -25,13 +27,13 @@ export default async function Page({
   const id = Array.isArray(routes) ? routes.at(0) : undefined;
 
   return (
-    <div className="flex flex-col gap-8">
-      <h3>Purchase subscription</h3>
+    <PageContainer>
+      <PageTitle>Purchase subscription</PageTitle>
       <PurchaseForm
         id={id}
         subscriptions={subscriptions}
         activeSubscription={activeSubscription}
       />
-    </div>
+    </PageContainer>
   );
 }

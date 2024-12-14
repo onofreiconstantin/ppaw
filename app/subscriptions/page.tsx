@@ -16,6 +16,8 @@ import { Users, UsersSubscriptions } from "@prisma/client";
 import SignIn from "@/components/sign-in/sign-in";
 import { getActiveSubscription } from "@/data/user-subscriptions";
 import { getPaymentType } from "@/utils/payments";
+import PageContainer from "@/components/page-container/page-container";
+import PageTitle from "@/components/page-title/page-title";
 
 export const metadata = {
   title: "Subscriptions",
@@ -37,7 +39,8 @@ export default async function Page() {
     ]);
 
   return (
-    <div className="flex flex-col gap-8">
+    <PageContainer>
+      <PageTitle>Subscriptions</PageTitle>
       <Table>
         <TableHeader>
           <TableRow>
@@ -85,6 +88,6 @@ export default async function Page() {
           })}
         </TableBody>
       </Table>
-    </div>
+    </PageContainer>
   );
 }

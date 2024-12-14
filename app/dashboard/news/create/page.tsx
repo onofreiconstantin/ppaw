@@ -7,6 +7,8 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { create } from "@/actions/news";
+import PageContainer from "@/components/page-container/page-container";
+import PageTitle from "@/components/page-title/page-title";
 
 export const metadata = {
   title: "Dashboard | News | Create",
@@ -17,8 +19,8 @@ export default async function Page() {
   if (session?.user && session?.user.role === UsersRole.USER) redirect("/");
 
   return (
-    <div className="flex flex-col gap-8">
-      <h3>Add news</h3>
+    <PageContainer>
+      <PageTitle>Add news</PageTitle>
       <form action={create} className="flex max-w-md flex-col gap-2">
         <Input name="userId" type="hidden" defaultValue={session?.user.id} />
         <div className="flex items-center gap-2">
@@ -35,6 +37,6 @@ export default async function Page() {
       <Link href={`/dashboard/news`}>
         <Button variant="outline">Back to list</Button>
       </Link>
-    </div>
+    </PageContainer>
   );
 }

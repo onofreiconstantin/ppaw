@@ -1,24 +1,50 @@
+import PageContainer from "@/components/page-container/page-container";
 import { getNews } from "@/data/news";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import PageTitle from "@/components/page-title/page-title";
 
 export default async function Home() {
   const news = await getNews();
 
   return (
-    <div className="flex flex-col gap-8">
+    <PageContainer>
+      <PageTitle>News</PageTitle>
+
       {news.map((item) => {
-        const { id, title, content, User } = item;
-        const { firstName, lastName } = User;
+        const { id, title, content, createdAt, User } = item;
+        const { firstName, lastName, imageUrl } = User;
 
         return (
-          <div key={id} className="flex max-w-xl flex-col gap-2">
-            <div className="flex justify-between gap-2">
-              <p>{title}</p>
-              <p>{`${lastName} ${firstName}`}</p>
-            </div>
-            <p>{content}</p>
-          </div>
+          <Card key={id}>
+            <CardHeader>
+              <CardTitle>{title}</CardTitle>
+              <CardDescription>
+                {new Date(createdAt).toDateString()}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>{content}</p>
+            </CardContent>
+            <CardFooter>
+              <div className="flex items-center gap-2">
+                <Avatar>
+                  <AvatarImage src={String(imageUrl)} />
+                  <AvatarFallback>USER</AvatarFallback>
+                </Avatar>
+                <p>{`${lastName} ${firstName}`}</p>
+              </div>
+            </CardFooter>
+          </Card>
         );
       })}
-    </div>
+    </PageContainer>
   );
 }

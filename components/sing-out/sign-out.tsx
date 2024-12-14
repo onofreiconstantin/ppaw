@@ -9,7 +9,9 @@ export default function SignOut() {
         await signOut({ redirectTo: "/" });
       }}
     >
-      <Button type="submit">Signout with Google</Button>
+      <Button variant="secondary" type="submit">
+        Sign Out
+      </Button>
     </form>
   );
 }

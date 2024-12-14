@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Sidebar from "@/components/sidebar/sidebar";
 import React from "react";
 
 const Layout = ({
@@ -7,13 +7,14 @@ const Layout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="flex gap-8">
-      <nav className="flex flex-col gap-8">
-        <Link href={"/account/edit"}>Edit profile</Link>
-        <Link href={"/account/subscriptions"}>Subscriptions</Link>
-      </nav>
+    <Sidebar
+      items={[
+        { href: "/account/edit", label: "Edit profile" },
+        { href: "/account/subscriptions", label: "Subscriptions" },
+      ]}
+    >
       {children}
-    </div>
+    </Sidebar>
   );
 };
 

@@ -1,5 +1,7 @@
 import { edit } from "@/actions/users";
 import { auth } from "@/auth";
+import PageContainer from "@/components/page-container/page-container";
+import PageTitle from "@/components/page-title/page-title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,8 +21,8 @@ export default async function Page() {
   const { id, firstName, lastName, cnp } = user;
 
   return (
-    <div className="flex flex-col gap-8">
-      <h3>Edit profile</h3>
+    <PageContainer>
+      <PageTitle>Edit profile</PageTitle>
       <form action={edit} className="flex max-w-md flex-col gap-2">
         <Input type="hidden" name="id" defaultValue={id} />
         <Input type="hidden" name="isCompleted" defaultValue={"true"} />
@@ -40,6 +42,6 @@ export default async function Page() {
 
         <Button variant="outline">Update</Button>
       </form>
-    </div>
+    </PageContainer>
   );
 }

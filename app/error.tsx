@@ -1,5 +1,8 @@
 "use client";
 
+import PageContainer from "@/components/page-container/page-container";
+import PageTitle from "@/components/page-title/page-title";
+
 export default function Error({
   error,
   reset,
@@ -7,5 +10,10 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  return <div>{error.message}</div>;
+  return (
+    <PageContainer>
+      <PageTitle>An error occurred</PageTitle>
+      <p className="text-red-500">{error.message}</p>
+    </PageContainer>
+  );
 }

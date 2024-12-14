@@ -1,4 +1,6 @@
 import { auth } from "@/auth";
+import PageContainer from "@/components/page-container/page-container";
+import PageTitle from "@/components/page-title/page-title";
 import { UsersRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 
@@ -11,5 +13,10 @@ export default async function Page() {
 
   if (session?.user && session?.user.role === UsersRole.USER) redirect("/");
 
-  return <div>Welcome to the dashboard</div>;
+  return (
+    <PageContainer>
+      <PageTitle>Dashboard</PageTitle>
+      <p className="text-orange-500">TO BE CONTINUED...</p>
+    </PageContainer>
+  );
 }

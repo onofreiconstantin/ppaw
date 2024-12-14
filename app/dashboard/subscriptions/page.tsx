@@ -14,6 +14,8 @@ import { remove } from "@/actions/subscriptions";
 import { auth } from "@/auth";
 import { UsersRole } from "@prisma/client";
 import { redirect } from "next/navigation";
+import PageContainer from "@/components/page-container/page-container";
+import PageTitle from "@/components/page-title/page-title";
 
 export const metadata = {
   title: "Dashboard | Subscriptions",
@@ -28,7 +30,8 @@ export default async function Page() {
   if (session?.user && session?.user.role === UsersRole.USER) redirect("/");
 
   return (
-    <div className="flex flex-col gap-8">
+    <PageContainer>
+      <PageTitle>Create subscription</PageTitle>
       <Link href={"/dashboard/subscriptions/create"}>
         <Button variant="outline">Create new</Button>
       </Link>
@@ -72,6 +75,6 @@ export default async function Page() {
           })}
         </TableBody>
       </Table>
-    </div>
+    </PageContainer>
   );
 }

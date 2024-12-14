@@ -45,7 +45,6 @@ export async function POST(request: NextRequest) {
               userId: user.id,
               subscriptionId: id,
               transactionId: transaction.id,
-              qrCode: crypto.randomUUID(),
               expiresAt: new Date(
                 new Date().getTime() + Number(subscription.time),
               ),

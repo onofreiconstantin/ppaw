@@ -1,4 +1,6 @@
 import { auth } from "@/auth";
+import PageContainer from "@/components/page-container/page-container";
+import PageTitle from "@/components/page-title/page-title";
 import { Button } from "@/components/ui/button";
 import { getSubscription } from "@/data/subscriptions";
 import { ONE_DAY_IN_MS } from "@/utils/constants";
@@ -33,8 +35,8 @@ export default async function Page({
   const { title, type, description, time, price } = subscription;
 
   return (
-    <div className="flex flex-col gap-8">
-      <h3>Subscription details</h3>
+    <PageContainer>
+      <PageTitle>Subscription details</PageTitle>
       <div className="flex flex-col gap-2">
         <p>{`Title: ${title}`}</p>
         <p>{`Description: ${description}`}</p>
@@ -50,6 +52,6 @@ export default async function Page({
           <Button variant="outline">Back to list</Button>
         </Link>
       </div>
-    </div>
+    </PageContainer>
   );
 }

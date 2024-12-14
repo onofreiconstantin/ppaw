@@ -11,7 +11,6 @@ model UsersSubscriptions {
     subscriptionId String                  @map(name: "subscription_id")
     Transaction    Transactions            @relation(fields: [transactionId], references: [id])
     transactionId  String                  @unique @map(name: "transaction_id")
-    qrCode         String                  @map(name: "qr_code")
     status         UsersSubscriptionStatus @default(ACTIVE)
     expiresAt      DateTime                @map(name: "expires_at")
     createdAt      DateTime                @default(now()) @map(name: "created_at")
