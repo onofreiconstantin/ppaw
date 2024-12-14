@@ -17,6 +17,9 @@ import { UsersRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import PageContainer from "@/components/page-container/page-container";
 import PageTitle from "@/components/page-title/page-title";
+import Form from "@/components/form/form";
+import { Input } from "@/components/ui/input";
+import FormButton from "@/components/form-button/form-button";
 
 export const metadata = {
   title: "Dashboard | News",
@@ -55,11 +58,10 @@ export default async function Page() {
                 <TableCell>{content}</TableCell>
                 <TableCell>{`${firstName} ${lastName}`}</TableCell>
                 <TableCell>
-                  <form action={remove.bind(null, id)}>
-                    <Button type="submit" variant="outline">
-                      Delete
-                    </Button>
-                  </form>
+                  <Form action={remove}>
+                    <Input name="id" type="hidden" defaultValue={id} />
+                    <FormButton variant="outline">Delete</FormButton>
+                  </Form>
                 </TableCell>
               </TableRow>
             );

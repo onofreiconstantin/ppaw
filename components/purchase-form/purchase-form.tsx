@@ -21,7 +21,9 @@ import {
   UsersSubscriptions,
 } from "@prisma/client";
 import Link from "next/link";
-import { FormEventHandler, useState } from "react";
+import { useState } from "react";
+import Form from "@/components/form/form";
+import FormButton from "../form-button/form-button";
 
 export default function PurchaseForm({
   id,
@@ -41,11 +43,6 @@ export default function PurchaseForm({
     (subscription) => subscription.id === selected,
   );
 
-  const handleOnSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    if (subscription?.id) checkout(subscription.id);
-  };
-
   const paymentType = subscription
     ? getPaymentType(subscription, activeSubscription)
     : null;
@@ -56,7 +53,9 @@ export default function PurchaseForm({
       : "";
 
   return (
-    <form className="flex max-w-md flex-col gap-2" onSubmit={handleOnSubmit}>
+    <Form className="flex max-w-md flex-col gap-2" action={checkout}>
+      <Input name="id" type="hidden" value={subscription?.id ?? ""} />
+
       <div className="flex items-center gap-2">
         <Label htmlFor="subscriptionId">Select subscription</Label>
         <Select
@@ -134,9 +133,9 @@ export default function PurchaseForm({
         <Input disabled name="price" type="number" value={paymentPrice} />
       </div>
       {user.isCompleted ? (
-        <Button disabled={!subscription?.id} variant="outline">
+        <FormButton disabled={!subscription?.id} variant="outline">
           Purchase
-        </Button>
+        </FormButton>
       ) : (
         <Link href={"account/edit"}>
           <Button type="button" variant="outline">
@@ -144,6 +143,6 @@ export default function PurchaseForm({
           </Button>
         </Link>
       )}
-    </form>
+    </Form>
   );
 }

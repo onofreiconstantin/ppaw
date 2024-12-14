@@ -36,7 +36,7 @@ export default async function Home() {
             <CardFooter>
               <div className="flex items-center gap-2">
                 <Avatar>
-                  <AvatarImage src={String(imageUrl)} />
+                  <AvatarImage src={imageUrl as string} />
                   <AvatarFallback>USER</AvatarFallback>
                 </Avatar>
                 <p>{`${lastName} ${firstName}`}</p>

@@ -1,5 +1,7 @@
 import { edit } from "@/actions/users";
 import { auth } from "@/auth";
+import FormButton from "@/components/form-button/form-button";
+import Form from "@/components/form/form";
 import PageContainer from "@/components/page-container/page-container";
 import PageTitle from "@/components/page-title/page-title";
 import { Button } from "@/components/ui/button";
@@ -23,7 +25,7 @@ export default async function Page() {
   return (
     <PageContainer>
       <PageTitle>Edit profile</PageTitle>
-      <form action={edit} className="flex max-w-md flex-col gap-2">
+      <Form action={edit} className="flex max-w-md flex-col gap-2">
         <Input type="hidden" name="id" defaultValue={id} />
         <Input type="hidden" name="isCompleted" defaultValue={"true"} />
 
@@ -39,9 +41,8 @@ export default async function Page() {
           <Label htmlFor="cnp">CNP</Label>
           <Input name="cnp" defaultValue={cnp ?? ""} />
         </div>
-
-        <Button variant="outline">Update</Button>
-      </form>
+        <FormButton variant="outline">Edit</FormButton>
+      </Form>
     </PageContainer>
   );
 }

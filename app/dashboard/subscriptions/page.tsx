@@ -16,6 +16,9 @@ import { UsersRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import PageContainer from "@/components/page-container/page-container";
 import PageTitle from "@/components/page-title/page-title";
+import { Input } from "@/components/ui/input";
+import Form from "@/components/form/form";
+import FormButton from "@/components/form-button/form-button";
 
 export const metadata = {
   title: "Dashboard | Subscriptions",
@@ -63,11 +66,10 @@ export default async function Page() {
                     <Link href={`/dashboard/subscriptions/${id}`}>
                       <Button variant="outline">Details</Button>
                     </Link>
-                    <form action={remove.bind(null, id)}>
-                      <Button type="submit" variant="outline">
-                        Delete
-                      </Button>
-                    </form>
+                    <Form action={remove}>
+                      <Input name="id" type="hidden" defaultValue={id} />
+                      <FormButton variant="outline">Delete</FormButton>
+                    </Form>
                   </div>
                 </TableCell>
               </TableRow>

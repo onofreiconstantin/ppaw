@@ -2,8 +2,8 @@ import { z } from "zod";
 
 const createSchema = z.object({
   userId: z.string(),
-  title: z.string().max(50),
-  content: z.string().max(500),
+  title: z.string().min(1).max(50),
+  content: z.string().min(1).max(500),
 });
 
 export { createSchema };

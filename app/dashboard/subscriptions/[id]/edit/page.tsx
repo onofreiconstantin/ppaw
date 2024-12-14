@@ -18,6 +18,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import PageContainer from "@/components/page-container/page-container";
 import PageTitle from "@/components/page-title/page-title";
+import Form from "@/components/form/form";
+import FormButton from "@/components/form-button/form-button";
 
 export async function generateMetadata({
   params,
@@ -49,7 +51,7 @@ export default async function Page({
   return (
     <PageContainer>
       <PageTitle>Edit subscription</PageTitle>
-      <form action={edit} className="flex max-w-md flex-col gap-2">
+      <Form action={edit} className="flex max-w-md flex-col gap-2">
         <Input name="id" defaultValue={id} type="hidden" />
         <div className="flex items-center gap-2">
           <Label htmlFor="title">Title</Label>
@@ -81,7 +83,7 @@ export default async function Page({
           <Input
             name="time"
             type="number"
-            defaultValue={Number(Number(time) / ONE_DAY_IN_MS).toFixed(1)}
+            defaultValue={Number(Number(time) / ONE_DAY_IN_MS).toFixed(2)}
             step="0.01"
           />
         </div>
@@ -89,8 +91,8 @@ export default async function Page({
           <Label htmlFor="price">Price</Label>
           <Input name="price" type="number" defaultValue={price} />
         </div>
-        <Button variant="outline">Save</Button>
-      </form>
+        <FormButton variant="outline">Edit</FormButton>
+      </Form>
 
       <Link href={`/dashboard/subscriptions`}>
         <Button variant="outline">Back to list</Button>

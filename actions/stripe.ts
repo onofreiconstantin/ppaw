@@ -11,7 +11,18 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-async function checkout(id: string) {
+async function checkout(
+  prevState:
+    | {
+        error?: string | Record<string, string[] | undefined>;
+        currentData?: Record<string, unknown> | undefined;
+      }
+    | undefined,
+  formData: FormData,
+) {
+  const id = formData.get("id") as string;
+  if (!id) return { error: "No id has been provided" };
+
   const session = await auth();
 
   if (!session?.user?.id)
@@ -55,9 +66,9 @@ async function checkout(id: string) {
       },
     ],
     payment_intent_data: {
-      metadata: { id, userId: String(session.user.id) },
+      metadata: { id, userId: session.user.id as string },
     },
-    customer_email: String(session.user.email),
+    customer_email: session.user.email as string,
     mode: "payment",
     success_url: `${origin}/purchase/success`,
     cancel_url: `${origin}/purchase/cancel`,

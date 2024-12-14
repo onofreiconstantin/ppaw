@@ -47,7 +47,7 @@ export default async function Navigation() {
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={String(session.user.image)} />
+                      <AvatarImage src={session.user.image as string} />
                       <AvatarFallback>USER</AvatarFallback>
                     </Avatar>
                     Account

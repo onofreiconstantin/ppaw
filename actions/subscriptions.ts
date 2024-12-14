@@ -7,7 +7,15 @@ import { redirect } from "next/navigation";
 import { getSubscription } from "@/data/subscriptions";
 import { revalidatePath } from "next/cache";
 
-async function create(formData: FormData) {
+async function create(
+  prevState:
+    | {
+        error?: string | Record<string, string[] | undefined>;
+        currentData?: Record<string, unknown> | undefined;
+      }
+    | undefined,
+  formData: FormData,
+) {
   const values = {
     title: formData.get("title"),
     description: formData.get("description"),
@@ -18,7 +26,8 @@ async function create(formData: FormData) {
 
   const { success, error, data } = createSchema.safeParse(values);
 
-  if (!success) return { error: error.flatten().fieldErrors };
+  if (!success)
+    return { error: error.flatten().fieldErrors, currentData: values };
 
   await prisma.subscriptions.create({
     data,
@@ -27,7 +36,15 @@ async function create(formData: FormData) {
   redirect("/dashboard/subscriptions");
 }
 
-async function edit(formData: FormData) {
+async function edit(
+  prevState:
+    | {
+        error?: string | Record<string, string[] | undefined>;
+        currentData?: Record<string, unknown> | undefined;
+      }
+    | undefined,
+  formData: FormData,
+) {
   const values = {
     id: formData.get("id"),
     title: formData.get("title"),
@@ -39,7 +56,8 @@ async function edit(formData: FormData) {
 
   const { success, error, data } = editSchema.safeParse(values);
 
-  if (!success) return { error: error.flatten().fieldErrors };
+  if (!success)
+    return { error: error.flatten().fieldErrors, currentData: values };
 
   const { id, ...rest } = data;
 
@@ -53,7 +71,18 @@ async function edit(formData: FormData) {
   redirect("/dashboard/subscriptions");
 }
 
-async function remove(id: string) {
+async function remove(
+  prevState:
+    | {
+        error?: string | Record<string, string[] | undefined>;
+        currentData?: Record<string, unknown> | undefined;
+      }
+    | undefined,
+  formData: FormData,
+) {
+  const id = formData.get("id") as string;
+  if (!id) return { error: "No id has been provided" };
+
   const subscription = await getSubscription(id);
   if (!subscription) return { error: "There is no subscription with this id!" };
 

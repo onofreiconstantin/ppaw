@@ -9,6 +9,8 @@ import { redirect } from "next/navigation";
 import { create } from "@/actions/news";
 import PageContainer from "@/components/page-container/page-container";
 import PageTitle from "@/components/page-title/page-title";
+import Form from "@/components/form/form";
+import FormButton from "@/components/form-button/form-button";
 
 export const metadata = {
   title: "Dashboard | News | Create",
@@ -21,7 +23,7 @@ export default async function Page() {
   return (
     <PageContainer>
       <PageTitle>Add news</PageTitle>
-      <form action={create} className="flex max-w-md flex-col gap-2">
+      <Form action={create} className="flex max-w-md flex-col gap-2">
         <Input name="userId" type="hidden" defaultValue={session?.user.id} />
         <div className="flex items-center gap-2">
           <Label htmlFor="title">Title</Label>
@@ -31,8 +33,8 @@ export default async function Page() {
           <Label htmlFor="content">Description</Label>
           <Textarea name="content" defaultValue={""} />
         </div>
-        <Button variant="outline">Add</Button>
-      </form>
+        <FormButton variant="outline">Add</FormButton>
+      </Form>
 
       <Link href={`/dashboard/news`}>
         <Button variant="outline">Back to list</Button>

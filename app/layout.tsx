@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation/navigation";
 import Footer from "@/components/footer/footer";
 import Main from "@/components/main/main";
 import Header from "@/components/header/header";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: {
@@ -26,6 +27,7 @@ export default function RootLayout({
         </Header>
         <Main>{children}</Main>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );
