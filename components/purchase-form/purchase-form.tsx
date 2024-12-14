@@ -17,16 +17,20 @@ import { getPaymentPrice, getPaymentType } from "@/utils/payments";
 import {
   Subscriptions,
   SubscriptionsType,
+  Users,
   UsersSubscriptions,
 } from "@prisma/client";
+import Link from "next/link";
 import { FormEventHandler, useState } from "react";
 
 export default function PurchaseForm({
   id,
+  user,
   subscriptions,
   activeSubscription,
 }: {
   id: string | undefined;
+  user: Users;
   subscriptions: Subscriptions[];
   activeSubscription: UsersSubscriptions | null;
 }) {
@@ -129,9 +133,17 @@ export default function PurchaseForm({
         <Label htmlFor="price">Price</Label>
         <Input disabled name="price" type="number" value={paymentPrice} />
       </div>
-      <Button disabled={!subscription?.id} variant="outline">
-        Purchase
-      </Button>
+      {user.isCompleted ? (
+        <Button disabled={!subscription?.id} variant="outline">
+          Purchase
+        </Button>
+      ) : (
+        <Link href={"account/edit"}>
+          <Button type="button" variant="outline">
+            Finalize account creation
+          </Button>
+        </Link>
+      )}
     </form>
   );
 }

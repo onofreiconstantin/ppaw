@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { getSubscription } from "@/data/subscriptions";
 import { getActiveSubscription } from "@/data/user-subscriptions";
+import { getUser } from "@/data/users";
 import { getPaymentPrice, getPaymentType } from "@/utils/payments";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -16,10 +17,13 @@ async function checkout(id: string) {
   if (!session?.user?.id)
     return { error: "You have no access to call this action!" };
 
-  const [subscription, activeSubscription] = await Promise.all([
+  const [user, subscription, activeSubscription] = await Promise.all([
+    getUser(session.user.id),
     getSubscription(id),
     getActiveSubscription(session.user.id),
   ]);
+
+  if (!user.isCompleted) return { error: "Complete account creation first!" };
 
   if (!subscription || subscription.isDeleted)
     return { error: "The subscription no longer exists!" };
