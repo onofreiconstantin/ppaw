@@ -21,12 +21,21 @@ async function checkout(
   formData: FormData,
 ) {
   const id = formData.get("id") as string;
-  if (!id) return { error: "No id has been provided" };
+  if (!id) {
+    console.error(
+      "No subscription id has been provided when trying to access the checkout page!",
+    );
+    return { error: "No id has been provided" };
+  }
 
   const session = await auth();
 
-  if (!session?.user?.id)
+  if (!session?.user?.id) {
+    console.error(
+      "No user id has been provided when trying to access the checkout page!",
+    );
     return { error: "You have no access to call this action!" };
+  }
 
   const [user, subscription, activeSubscription] = await Promise.all([
     getUser(session.user.id),
@@ -34,10 +43,19 @@ async function checkout(
     getActiveSubscription(session.user.id),
   ]);
 
-  if (!user.isCompleted) return { error: "Complete account creation first!" };
+  if (!user.isCompleted) {
+    console.error(
+      "The user account hasn't been completed when trying to access the checkout page!",
+    );
+    return { error: "Complete account creation first!" };
+  }
 
-  if (!subscription || subscription.isDeleted)
+  if (!subscription || subscription.isDeleted) {
+    console.error(
+      "The selected subscription no longer exists when trying to access the checkout page!",
+    );
     return { error: "The subscription no longer exists!" };
+  }
 
   const paymentType = getPaymentType(subscription, activeSubscription);
 
@@ -74,7 +92,12 @@ async function checkout(
     cancel_url: `${origin}/purchase/cancel`,
   });
 
-  if (!paymentSession.url) return { error: "No checkout page was provided!" };
+  if (!paymentSession.url) {
+    console.error(
+      "No checkout page was provided when trying to access the checkout page! This is probably related to the product data sent to stripe.",
+    );
+    return { error: "No checkout page was provided!" };
+  }
 
   redirect(paymentSession.url);
 }

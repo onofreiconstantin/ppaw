@@ -26,8 +26,12 @@ export async function POST(request: NextRequest) {
           getActiveSubscription(userId),
         ]);
 
-        if (!subscription || !user)
+        if (!subscription || !user) {
+          console.error(
+            "No user or subscription has been found when trying to create the transaction and user subscription",
+          );
           return new NextResponse("Bad request", { status: 400 });
+        }
 
         await prisma.$transaction(async (tx) => {
           const transaction = await tx.transactions.create({
@@ -60,7 +64,9 @@ export async function POST(request: NextRequest) {
     return new NextResponse();
   } catch (error) {
     return new NextResponse(
-      error instanceof Error ? error.message : "Bad request",
+      error instanceof Error
+        ? error.message
+        : "Something wrong happened when trying to create the transaction and the user subscription! This situation needs more debugging!",
       {
         status: 400,
       },
