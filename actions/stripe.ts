@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { getSubscription } from "@/data/subscriptions";
 import { getActiveSubscription } from "@/data/user-subscriptions";
 import { getUser } from "@/data/users";
+import { logger } from "@/utils/logger";
 import { getPaymentPrice, getPaymentType } from "@/utils/payments";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -20,21 +21,23 @@ async function checkout(
     | undefined,
   formData: FormData,
 ) {
-  const id = formData.get("id") as string;
-  if (!id) {
-    console.error(
-      "No subscription id has been provided when trying to access the checkout page!",
-    );
-    return { error: "No id has been provided" };
-  }
-
   const session = await auth();
 
   if (!session?.user?.id) {
-    console.error(
+    logger(
       "No user id has been provided when trying to access the checkout page!",
+      session?.user,
     );
     return { error: "You have no access to call this action!" };
+  }
+
+  const id = formData.get("id") as string;
+  if (!id) {
+    logger(
+      "No subscription id has been provided when trying to access the checkout page!",
+      session.user,
+    );
+    return { error: "No id has been provided" };
   }
 
   const [user, subscription, activeSubscription] = await Promise.all([
@@ -44,15 +47,17 @@ async function checkout(
   ]);
 
   if (!user.isCompleted) {
-    console.error(
+    logger(
       "The user account hasn't been completed when trying to access the checkout page!",
+      user,
     );
     return { error: "Complete account creation first!" };
   }
 
   if (!subscription || subscription.isDeleted) {
-    console.error(
+    logger(
       "The selected subscription no longer exists when trying to access the checkout page!",
+      user,
     );
     return { error: "The subscription no longer exists!" };
   }
@@ -93,8 +98,9 @@ async function checkout(
   });
 
   if (!paymentSession.url) {
-    console.error(
+    logger(
       "No checkout page was provided when trying to access the checkout page! This is probably related to the product data sent to stripe.",
+      user,
     );
     return { error: "No checkout page was provided!" };
   }

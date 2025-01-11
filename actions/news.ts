@@ -4,7 +4,7 @@ import prisma from "@/lib/db";
 import { revalidateTag } from "next/cache";
 import { getNewsItem } from "@/data/news";
 import { redirect } from "next/navigation";
-import { createSchema } from "@/schemas/news";
+import { createSchema, editSchema } from "@/schemas/news";
 
 async function create(
   prevState:
@@ -34,6 +34,39 @@ async function create(
   redirect("/dashboard/news");
 }
 
+async function edit(
+  prevState:
+    | {
+        error?: string | Record<string, string[] | undefined>;
+        currentData?: Record<string, unknown> | undefined;
+      }
+    | undefined,
+  formData: FormData,
+) {
+  const values = {
+    id: formData.get("id"),
+    title: formData.get("title"),
+    content: formData.get("content"),
+  };
+
+  const { success, error, data } = editSchema.safeParse(values);
+
+  if (!success)
+    return { error: error.flatten().fieldErrors, currentData: values };
+
+  const { id, ...rest } = data;
+
+  await prisma.news.update({
+    where: {
+      id,
+    },
+    data: rest,
+  });
+
+  revalidateTag("news");
+  redirect("/dashboard/news");
+}
+
 async function remove(
   prevState:
     | {
@@ -56,4 +89,4 @@ async function remove(
   revalidateTag("news");
 }
 
-export { create, remove };
+export { create, edit, remove };

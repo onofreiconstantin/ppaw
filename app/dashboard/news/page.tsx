@@ -26,11 +26,9 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const session = await auth();
+  const [session, news] = await Promise.all([auth(), getNews()]);
 
   if (session?.user && session?.user.role === UsersRole.USER) redirect("/");
-
-  const news = await getNews();
 
   return (
     <PageContainer>
@@ -50,7 +48,7 @@ export default async function Page() {
         <TableBody>
           {news.map((item) => {
             const { id, title, content, User } = item;
-            const { firstName, lastName } = User;
+            const { id: userId, firstName, lastName } = User;
 
             return (
               <TableRow key={id}>
@@ -58,10 +56,22 @@ export default async function Page() {
                 <TableCell>{content}</TableCell>
                 <TableCell>{`${firstName} ${lastName}`}</TableCell>
                 <TableCell>
-                  <Form action={remove}>
-                    <Input name="id" type="hidden" defaultValue={id} />
-                    <FormButton variant="outline">Delete</FormButton>
-                  </Form>
+                  <div className="flex gap-2">
+                    <Link href={`/dashboard/news/${id}`}>
+                      <Button variant="outline">Details</Button>
+                    </Link>
+                    {session?.user.id === userId && (
+                      <>
+                        <Link href={`/dashboard/news/${id}/edit`}>
+                          <Button variant="outline">Edit</Button>
+                        </Link>
+                        <Form action={remove}>
+                          <Input name="id" type="hidden" defaultValue={id} />
+                          <FormButton variant="outline">Delete</FormButton>
+                        </Form>
+                      </>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             );

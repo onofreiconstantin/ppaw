@@ -6,4 +6,10 @@ const createSchema = z.object({
   content: z.string().min(1).max(500),
 });
 
-export { createSchema };
+const editSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1).max(50),
+  content: z.string().min(1).max(500),
+});
+
+export { createSchema, editSchema };

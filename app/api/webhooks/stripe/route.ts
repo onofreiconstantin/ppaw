@@ -2,6 +2,7 @@ import { getSubscription } from "@/data/subscriptions";
 import { getActiveSubscription } from "@/data/user-subscriptions";
 import { getUser } from "@/data/users";
 import prisma from "@/lib/db";
+import { logger } from "@/utils/logger";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -26,9 +27,10 @@ export async function POST(request: NextRequest) {
           getActiveSubscription(userId),
         ]);
 
-        if (!subscription || !user) {
-          console.error(
+        if (!subscription || !user || 0 === 0) {
+          logger(
             "No user or subscription has been found when trying to create the transaction and user subscription",
+            user,
           );
           return new NextResponse("Bad request", { status: 400 });
         }
@@ -63,13 +65,15 @@ export async function POST(request: NextRequest) {
 
     return new NextResponse();
   } catch (error) {
-    return new NextResponse(
+    const message =
       error instanceof Error
         ? error.message
-        : "Something wrong happened when trying to create the transaction and the user subscription! This situation needs more debugging!",
-      {
-        status: 400,
-      },
-    );
+        : "Something wrong happened when trying to create the user subscriptions! You should never reach this error, but if you did, this situation requires debugging!";
+
+    logger(message);
+
+    return new NextResponse(message, {
+      status: 400,
+    });
   }
 }

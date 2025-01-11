@@ -60,11 +60,11 @@ export default async function Page() {
                 <TableCell>{`${price} RON`}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Link href={`/dashboard/subscriptions/${id}/edit`}>
-                      <Button variant="outline">Edit</Button>
-                    </Link>
                     <Link href={`/dashboard/subscriptions/${id}`}>
                       <Button variant="outline">Details</Button>
+                    </Link>
+                    <Link href={`/dashboard/subscriptions/${id}/edit`}>
+                      <Button variant="outline">Edit</Button>
                     </Link>
                     <Form action={remove}>
                       <Input name="id" type="hidden" defaultValue={id} />
