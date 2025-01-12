@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
           getActiveSubscription(userId),
         ]);
 
-        if (!subscription || !user || 0 === 0) {
+        if (!subscription || !user) {
           logger(
             "No user or subscription has been found when trying to create the transaction and user subscription",
             user,
